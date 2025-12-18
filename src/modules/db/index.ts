@@ -51,6 +51,7 @@ const _create = async (): Promise<BMadDatabase> => {
     name: "bmaddb",
     storage,
     ignoreDuplicate: true, // Helpful for HMR
+    multiInstance: false, // Disable multi-instance to avoid conflicts
   });
 
   console.log("DatabaseService: created database");
