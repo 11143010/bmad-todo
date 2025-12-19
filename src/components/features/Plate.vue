@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useTaskStore } from "@/stores/task.store";
 import { useTagStore } from "@/stores/tag.store";
 import StressEstimator from "@/components/features/StressEstimator.vue";
 import ChopperModal from "@/components/features/ChopperModal.vue";
 import TagSelector from "@/components/features/TagSelector.vue";
 import StardustBurst from "@/components/features/StardustBurst.vue";
+import draggable from "vuedraggable";
 import { useI18n } from "@/modules/i18n";
 
 const { t } = useI18n();
@@ -27,11 +28,48 @@ const choppingTaskId = ref<string | null>(null);
 const choppingTaskTitle = ref("");
 
 // Sorting
-type SortOption = "newest" | "oldest" | "points-asc" | "points-desc";
+type SortOption = "newest" | "oldest" | "points-asc" | "points-desc" | "manual";
 const sortBy = ref<SortOption>("newest");
 
+// Search
+const searchQuery = ref("");
+const isSearchVisible = ref(false);
+
+// Drag-drop mode
+const isDragging = ref(false);
+const localTasks = ref<typeof taskStore.tasks>([]);
+
+// Sync local tasks when store changes
+watch(
+  () => taskStore.tasks,
+  (newTasks) => {
+    if (!isDragging.value) {
+      localTasks.value = [...newTasks];
+    }
+  },
+  { immediate: true, deep: true }
+);
+
 const sortedTasks = computed(() => {
-  const tasks = [...taskStore.tasks];
+  // For manual sorting, use local order
+  if (sortBy.value === "manual") {
+    let tasks = [...localTasks.value];
+    if (searchQuery.value.trim()) {
+      const query = searchQuery.value.toLowerCase();
+      tasks = tasks.filter((task) => task.title.toLowerCase().includes(query));
+    }
+    return tasks;
+  }
+
+  let tasks = [...taskStore.tasks];
+
+  // Apply search filter
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase();
+    tasks = tasks.filter((task) => task.title.toLowerCase().includes(query));
+  }
+
+  // Apply sorting
   switch (sortBy.value) {
     case "oldest":
       return tasks.sort((a, b) => a.createdAt - b.createdAt);
@@ -44,6 +82,25 @@ const sortedTasks = computed(() => {
       return tasks.sort((a, b) => b.createdAt - a.createdAt);
   }
 });
+
+/**
+ * Handle drag start
+ */
+const onDragStart = (): void => {
+  isDragging.value = true;
+  // Switch to manual mode when dragging
+  if (sortBy.value !== "manual") {
+    localTasks.value = [...sortedTasks.value];
+    sortBy.value = "manual";
+  }
+};
+
+/**
+ * Handle drag end and update order
+ */
+const onDragEnd = (): void => {
+  isDragging.value = false;
+};
 
 /**
  * Format timestamp to HH:MM display format
@@ -239,8 +296,80 @@ const saveEdit = async (): Promise<void> => {
         >
           {{ t("plate.sort.light") }}
         </button>
+        <button
+          @click="sortBy = 'manual'"
+          class="text-[10px] px-2 py-1 rounded transition-colors"
+          :class="
+            sortBy === 'manual'
+              ? 'bg-zinc-800 text-purple-400'
+              : 'text-zinc-600 hover:text-zinc-400'
+          "
+          :title="t('plate.sort.manual') || 'Manual (drag to reorder)'"
+        >
+          ↕
+        </button>
+
+        <!-- Search Toggle -->
+        <button
+          @click="isSearchVisible = !isSearchVisible"
+          class="text-[10px] px-2 py-1 rounded transition-colors ml-2"
+          :class="
+            isSearchVisible || searchQuery
+              ? 'bg-zinc-800 text-cyan-400'
+              : 'text-zinc-600 hover:text-zinc-400'
+          "
+        >
+          🔍
+        </button>
       </div>
     </div>
+
+    <!-- Search Input -->
+    <Transition
+      enter-active-class="transition-all duration-200 ease-out"
+      enter-from-class="opacity-0 -translate-y-2"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition-all duration-150 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-2"
+    >
+      <div v-if="isSearchVisible" class="mb-4">
+        <div class="relative">
+          <input
+            v-model="searchQuery"
+            type="text"
+            :placeholder="t('plate.search') || 'Search tasks...'"
+            class="search-input w-full px-4 py-3 pl-10 rounded-xl text-sm text-zinc-200 placeholder-zinc-500 transition-all"
+            @keyup.escape="
+              isSearchVisible = false;
+              searchQuery = '';
+            "
+          />
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+            >🔍</span
+          >
+          <button
+            v-if="searchQuery"
+            @click="searchQuery = ''"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+          >
+            ✕
+          </button>
+        </div>
+        <p
+          v-if="searchQuery && sortedTasks.length === 0"
+          class="text-xs text-zinc-500 mt-2 text-center"
+        >
+          {{ t("plate.noResults") || "No tasks found" }}
+        </p>
+        <p
+          v-else-if="searchQuery"
+          class="text-xs text-zinc-500 mt-2 text-center"
+        >
+          {{ sortedTasks.length }} {{ t("plate.found") || "found" }}
+        </p>
+      </div>
+    </Transition>
 
     <!-- Empty State with cosmic theme -->
     <div
@@ -266,196 +395,205 @@ const saveEdit = async (): Promise<void> => {
     </div>
 
     <!-- Task List -->
-    <TransitionGroup name="list" tag="div" class="space-y-4">
-      <div
-        v-for="task in sortedTasks"
-        :key="task.id"
-        class="task-card group relative overflow-hidden rounded-xl p-5 transition-all duration-300"
-      >
-        <!-- Hover Glow Effect -->
+    <draggable
+      v-model="localTasks"
+      item-key="id"
+      tag="div"
+      class="space-y-4"
+      handle=".drag-handle"
+      ghost-class="opacity-50"
+      @start="onDragStart"
+      @end="onDragEnd"
+    >
+      <template #item="{ element: task }">
         <div
-          class="absolute top-0 left-0 w-1 h-full transition-all duration-300"
-          style="background: var(--glass-border)"
-          :style="{
-            background:
-              task.points > 3 ? 'var(--nebula-pink)' : 'var(--glass-border)',
-          }"
-        ></div>
+          class="task-card group relative overflow-hidden rounded-xl p-5 transition-all duration-300"
+        >
+          <!-- Hover Glow Effect / Drag Handle -->
+          <div
+            class="drag-handle absolute top-0 left-0 w-1 h-full transition-all duration-300 cursor-grab active:cursor-grabbing"
+            style="background: var(--glass-border)"
+            :style="{
+              background:
+                task.points > 3 ? 'var(--nebula-pink)' : 'var(--glass-border)',
+            }"
+          ></div>
 
-        <div class="flex items-start pl-4 justify-between">
-          <div class="flex items-start space-x-4">
-            <!-- Check Button -->
-            <button
-              @click="handleTaskComplete($event, task.id)"
-              class="mt-1 w-5 h-5 rounded border border-zinc-600 hover:border-green-400 hover:bg-green-500/10 transition-all flex items-center justify-center group/check shrink-0 relative overflow-hidden"
-            >
-              <div
-                class="absolute inset-0 bg-green-400 opacity-0 group-hover/check:opacity-10 transition-opacity"
-              ></div>
-            </button>
-
-            <div class="space-y-1 flex-1">
-              <!-- Editing Mode -->
-              <div
-                v-if="editingTaskId === task.id"
-                class="flex items-center gap-2"
-              >
-                <input
-                  v-model="editingTitle"
-                  @keyup.enter="saveEdit"
-                  @keyup.escape="cancelEdit"
-                  class="flex-1 bg-zinc-800 border border-zinc-600 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-green-500"
-                  autofocus
-                />
-                <button
-                  @click="saveEdit"
-                  class="text-green-500 hover:text-green-400 text-xs"
-                >
-                  ✓
-                </button>
-                <button
-                  @click="cancelEdit"
-                  class="text-zinc-500 hover:text-zinc-300 text-xs"
-                >
-                  ✕
-                </button>
-              </div>
-              <!-- Display Mode -->
-              <template v-else>
-                <h3
-                  @dblclick="startEdit(task)"
-                  class="text-base text-zinc-200 font-medium tracking-wide group-hover:text-white transition-colors cursor-text"
-                  :title="t('task.edit')"
-                >
-                  {{ task.title }}
-                </h3>
-              </template>
-              <!-- Tags Display -->
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span
-                  v-for="tag in tagStore.getTaskTags(task.id)"
-                  :key="tag.id"
-                  class="text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1"
-                  :style="{
-                    backgroundColor: tag.color + '20',
-                    color: tag.color,
-                  }"
-                >
-                  {{ tag.emoji }} {{ tag.name }}
-                </span>
-              </div>
-              <p
-                class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider"
-              >
-                ID: {{ task.id.slice(0, 4) }} //
-                {{ formatDate(task.createdAt) }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="pl-2 flex items-center space-x-3 relative">
-            <!-- TAG BUTTON -->
-            <div class="relative">
+          <div class="flex items-start pl-4 justify-between">
+            <div class="flex items-start space-x-4">
+              <!-- Check Button -->
               <button
-                @click="
-                  taggingTaskId = taggingTaskId === task.id ? null : task.id
-                "
-                class="text-zinc-700 hover:text-amber-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
-                :title="t('tag.add')"
+                @click="handleTaskComplete($event, task.id)"
+                class="mt-1 w-5 h-5 rounded border border-zinc-600 hover:border-green-400 hover:bg-green-500/10 transition-all flex items-center justify-center group/check shrink-0 relative overflow-hidden"
               >
-                🏷️
+                <div
+                  class="absolute inset-0 bg-green-400 opacity-0 group-hover/check:opacity-10 transition-opacity"
+                ></div>
               </button>
-              <!-- Tag Selector Dropdown -->
-              <TagSelector
-                v-if="taggingTaskId === task.id"
-                :taskId="task.id"
-                @close="taggingTaskId = null"
-              />
+
+              <div class="space-y-1 flex-1">
+                <!-- Editing Mode -->
+                <div
+                  v-if="editingTaskId === task.id"
+                  class="flex items-center gap-2"
+                >
+                  <input
+                    v-model="editingTitle"
+                    @keyup.enter="saveEdit"
+                    @keyup.escape="cancelEdit"
+                    class="flex-1 bg-zinc-800 border border-zinc-600 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-green-500"
+                    autofocus
+                  />
+                  <button
+                    @click="saveEdit"
+                    class="text-green-500 hover:text-green-400 text-xs"
+                  >
+                    ✓
+                  </button>
+                  <button
+                    @click="cancelEdit"
+                    class="text-zinc-500 hover:text-zinc-300 text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <!-- Display Mode -->
+                <template v-else>
+                  <h3
+                    @dblclick="startEdit(task)"
+                    class="text-base text-zinc-200 font-medium tracking-wide group-hover:text-white transition-colors cursor-text"
+                    :title="t('task.edit')"
+                  >
+                    {{ task.title }}
+                  </h3>
+                </template>
+                <!-- Tags Display -->
+                <div class="flex flex-wrap gap-1 mt-1">
+                  <span
+                    v-for="tag in tagStore.getTaskTags(task.id)"
+                    :key="tag.id"
+                    class="text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1"
+                    :style="{
+                      backgroundColor: tag.color + '20',
+                      color: tag.color,
+                    }"
+                  >
+                    {{ tag.emoji }} {{ tag.name }}
+                  </span>
+                </div>
+                <p
+                  class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider"
+                >
+                  ID: {{ task.id.slice(0, 4) }} //
+                  {{ formatDate(task.createdAt) }}
+                </p>
+              </div>
             </div>
 
-            <!-- DELETE BUTTON -->
-            <button
-              @click="taskStore.deleteTask(task.id)"
-              class="text-zinc-700 hover:text-red-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
-              :title="t('task.delete')"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M3 6h18" />
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-              </svg>
-            </button>
-
-            <!-- CHOPPER TRIGGER (Only if points > 3) -->
-            <button
-              v-if="task.points > 3"
-              @click="openChopper(task)"
-              class="text-zinc-600 hover:text-red-500 transition-colors p-1"
-              :title="t('task.chop')"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="m2 2 20 20" />
-                <path
-                  d="m11 2 10.56 10.56a2 2 0 0 1 0 2.83l-1.93 1.93a2 2 0 0 1-2.83 0L6.24 6.76"
+            <!-- Actions -->
+            <div class="pl-2 flex items-center space-x-3 relative">
+              <!-- TAG BUTTON -->
+              <div class="relative">
+                <button
+                  @click="
+                    taggingTaskId = taggingTaskId === task.id ? null : task.id
+                  "
+                  class="text-zinc-700 hover:text-amber-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
+                  :title="t('tag.add')"
+                >
+                  🏷️
+                </button>
+                <!-- Tag Selector Dropdown -->
+                <TagSelector
+                  v-if="taggingTaskId === task.id"
+                  :taskId="task.id"
+                  @close="taggingTaskId = null"
                 />
-              </svg>
-            </button>
-
-            <!-- WEIGH / POINTS -->
-            <button
-              v-if="task.points === 0"
-              @click="openEstimator(task.id)"
-              class="px-3 py-1 bg-zinc-950 border border-zinc-800 text-zinc-500 text-[10px] font-bold uppercase tracking-widest hover:border-zinc-600 hover:text-zinc-300 transition-all"
-            >
-              {{ t("task.weigh") }}
-            </button>
-
-            <div
-              v-else
-              @click="openEstimator(task.id)"
-              class="flex flex-col items-center cursor-pointer group/points"
-            >
-              <div
-                class="text-xl font-black font-mono leading-none"
-                :class="
-                  task.points > 3
-                    ? 'text-red-500'
-                    : 'text-zinc-400 group-hover/points:text-white'
-                "
-              >
-                {{ task.points }}
               </div>
-              <div
-                class="text-[9px] text-zinc-600 uppercase font-bold tracking-tighter"
+
+              <!-- DELETE BUTTON -->
+              <button
+                @click="taskStore.deleteTask(task.id)"
+                class="text-zinc-700 hover:text-red-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
+                :title="t('task.delete')"
               >
-                PTS
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
+              </button>
+
+              <!-- CHOPPER TRIGGER (Only if points > 3) -->
+              <button
+                v-if="task.points > 3"
+                @click="openChopper(task)"
+                class="text-zinc-600 hover:text-red-500 transition-colors p-1"
+                :title="t('task.chop')"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m2 2 20 20" />
+                  <path
+                    d="m11 2 10.56 10.56a2 2 0 0 1 0 2.83l-1.93 1.93a2 2 0 0 1-2.83 0L6.24 6.76"
+                  />
+                </svg>
+              </button>
+
+              <!-- WEIGH / POINTS -->
+              <button
+                v-if="task.points === 0"
+                @click="openEstimator(task.id)"
+                class="px-3 py-1 bg-zinc-950 border border-zinc-800 text-zinc-500 text-[10px] font-bold uppercase tracking-widest hover:border-zinc-600 hover:text-zinc-300 transition-all"
+              >
+                {{ t("task.weigh") }}
+              </button>
+
+              <div
+                v-else
+                @click="openEstimator(task.id)"
+                class="flex flex-col items-center cursor-pointer group/points"
+              >
+                <div
+                  class="text-xl font-black font-mono leading-none"
+                  :class="
+                    task.points > 3
+                      ? 'text-red-500'
+                      : 'text-zinc-400 group-hover/points:text-white'
+                  "
+                >
+                  {{ task.points }}
+                </div>
+                <div
+                  class="text-[9px] text-zinc-600 uppercase font-bold tracking-tighter"
+                >
+                  PTS
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </TransitionGroup>
+      </template>
+    </draggable>
 
     <!-- Estimator Modal -->
     <Teleport to="body">
@@ -541,5 +679,19 @@ const saveEdit = async (): Promise<void> => {
 .task-card:hover {
   border-color: rgba(139, 92, 246, 0.3);
   box-shadow: 0 4px 24px rgba(139, 92, 246, 0.1);
+}
+
+/* Search Input */
+.search-input {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--nebula-cyan);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
 }
 </style>

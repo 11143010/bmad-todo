@@ -15,6 +15,10 @@ const translations = {
     "plate.sort.new": "新",
     "plate.sort.heavy": "重",
     "plate.sort.light": "輕",
+    "plate.search": "搜尋任務...",
+    "plate.noResults": "找不到任務",
+    "plate.found": "個結果",
+    "plate.sort.manual": "手動排序",
 
     // Task
     "task.weigh": "稱重",
@@ -102,6 +106,10 @@ const translations = {
     "plate.sort.new": "New",
     "plate.sort.heavy": "Heavy",
     "plate.sort.light": "Light",
+    "plate.search": "Search tasks...",
+    "plate.noResults": "No tasks found",
+    "plate.found": "found",
+    "plate.sort.manual": "Manual (drag to reorder)",
 
     // Task
     "task.weigh": "Weigh",
