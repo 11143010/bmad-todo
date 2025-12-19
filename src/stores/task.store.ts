@@ -31,7 +31,7 @@ export const useTaskStore = defineStore("tasks", () => {
         selector: {
           status: "active",
         },
-        sort: [{ createdAt: "desc" }],
+        sort: [{ order: "asc" }, { createdAt: "desc" }],
       })
       .$.subscribe((docs: TaskDocType[]) => {
         tasks.value = docs;
@@ -53,10 +53,46 @@ export const useTaskStore = defineStore("tasks", () => {
       status: "active",
       points: UNPROCESSED_POINTS,
       createdAt: Date.now(),
+      order: 0, // Default order, will be updated on manual sort
     };
     await db.tasks.insert(newTask);
     sensory.play("add");
     sensory.vibrate("light");
+  };
+
+  /**
+   * Reorder tasks based on the provided list of IDs
+   * @param {string[]} orderedIds - List of task IDs in the new order
+   * @returns {Promise<void>}
+   */
+  const reorderTasks = async (orderedIds: string[]): Promise<void> => {
+    const db = await getDB();
+    const tasksMap = await db.tasks
+      .find({
+        selector: {
+          id: {
+            $in: orderedIds,
+          },
+        },
+      })
+      .exec()
+      .then((docs) => new Map(docs.map((d) => [d.id, d])));
+
+    const updates: Promise<unknown>[] = [];
+
+    // Update order for each task based on its new index
+    orderedIds.forEach((id, i) => {
+      const task = tasksMap.get(id);
+      if (task && task.order !== i) {
+        updates.push(task.patch({ order: i }));
+      }
+    });
+
+    if (updates.length > 0) {
+      await Promise.all(updates);
+      // Sensory feedback for reorder is handled by UI drag end usually,
+      // but we can add a subtle one here if needed.
+    }
   };
 
   /**
@@ -206,6 +242,7 @@ export const useTaskStore = defineStore("tasks", () => {
     addTask,
     estimateTask,
     completeTask,
+    reorderTasks,
     chopTask,
     updateTaskTitle,
     deleteTask,

@@ -76,6 +76,13 @@ const _create = async (): Promise<BMadDatabase> => {
   await db.addCollections({
     tasks: {
       schema: taskSchema,
+      migrationStrategies: {
+        // Migration from version 0 to 1: add order field
+        1: (oldDoc: Record<string, unknown>) => ({
+          ...oldDoc,
+          order: 0,
+        }),
+      },
     },
     settings: {
       schema: settingsSchema,

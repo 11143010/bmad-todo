@@ -8,6 +8,7 @@ import TagSelector from "@/components/features/TagSelector.vue";
 import StardustBurst from "@/components/features/StardustBurst.vue";
 import draggable from "vuedraggable";
 import { useI18n } from "@/modules/i18n";
+import { sensory } from "@/modules/sensory";
 
 const { t } = useI18n();
 const taskStore = useTaskStore();
@@ -88,6 +89,7 @@ const sortedTasks = computed(() => {
  */
 const onDragStart = (): void => {
   isDragging.value = true;
+  sensory.vibrate("light");
   // Switch to manual mode when dragging
   if (sortBy.value !== "manual") {
     localTasks.value = [...sortedTasks.value];
@@ -98,8 +100,13 @@ const onDragStart = (): void => {
 /**
  * Handle drag end and update order
  */
-const onDragEnd = (): void => {
+const onDragEnd = async (): Promise<void> => {
   isDragging.value = false;
+  sensory.vibrate("medium");
+
+  // Persist the new order
+  const orderedIds = localTasks.value.map((t) => t.id);
+  await taskStore.reorderTasks(orderedIds);
 };
 
 /**
@@ -271,6 +278,7 @@ const saveEdit = async (): Promise<void> => {
               ? 'bg-zinc-800 text-green-400'
               : 'text-zinc-600 hover:text-zinc-400'
           "
+          :aria-label="t('plate.sort.new')"
         >
           {{ t("plate.sort.new") }}
         </button>
@@ -282,6 +290,7 @@ const saveEdit = async (): Promise<void> => {
               ? 'bg-zinc-800 text-green-400'
               : 'text-zinc-600 hover:text-zinc-400'
           "
+          :aria-label="t('plate.sort.heavy')"
         >
           {{ t("plate.sort.heavy") }}
         </button>
@@ -293,6 +302,7 @@ const saveEdit = async (): Promise<void> => {
               ? 'bg-zinc-800 text-green-400'
               : 'text-zinc-600 hover:text-zinc-400'
           "
+          :aria-label="t('plate.sort.light')"
         >
           {{ t("plate.sort.light") }}
         </button>
@@ -305,6 +315,7 @@ const saveEdit = async (): Promise<void> => {
               : 'text-zinc-600 hover:text-zinc-400'
           "
           :title="t('plate.sort.manual') || 'Manual (drag to reorder)'"
+          :aria-label="t('plate.sort.manual')"
         >
           ↕
         </button>
@@ -318,6 +329,7 @@ const saveEdit = async (): Promise<void> => {
               ? 'bg-zinc-800 text-cyan-400'
               : 'text-zinc-600 hover:text-zinc-400'
           "
+          :aria-label="t('plate.search')"
         >
           🔍
         </button>
@@ -501,6 +513,7 @@ const saveEdit = async (): Promise<void> => {
                   "
                   class="w-8 h-8 rounded-full bg-zinc-900/30 hover:bg-zinc-800 text-zinc-500 hover:text-amber-400 transition-all flex items-center justify-center backdrop-blur-sm border border-transparent hover:border-amber-500/30"
                   :title="t('tag.add')"
+                  :aria-label="t('tag.add')"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -532,6 +545,7 @@ const saveEdit = async (): Promise<void> => {
                 @click="taskStore.deleteTask(task.id)"
                 class="w-8 h-8 rounded-full bg-zinc-900/30 hover:bg-red-900/20 text-zinc-500 hover:text-red-400 transition-all flex items-center justify-center backdrop-blur-sm border border-transparent hover:border-red-500/30"
                 :title="t('task.delete')"
+                :aria-label="t('task.delete')"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -556,6 +570,7 @@ const saveEdit = async (): Promise<void> => {
                 @click="openChopper(task)"
                 class="text-zinc-600 hover:text-red-500 transition-colors p-1"
                 :title="t('task.chop')"
+                :aria-label="t('task.chop')"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -581,6 +596,7 @@ const saveEdit = async (): Promise<void> => {
                 v-if="task.points === 0"
                 @click="openEstimator(task.id)"
                 class="px-4 py-1.5 rounded-full bg-zinc-900/50 border border-zinc-700 hover:border-cyan-500/50 text-cyan-200/80 hover:text-cyan-100 text-xs font-bold uppercase tracking-widest transition-all hover:bg-cyan-900/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.15)] flex items-center gap-2 group/weigh"
+                :aria-label="t('task.weigh')"
               >
                 <span class="group-hover/weigh:animate-pulse">⚖️</span>
                 {{ t("task.weigh") }}

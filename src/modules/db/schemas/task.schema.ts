@@ -5,7 +5,7 @@ import {
 } from "rxdb";
 
 export const taskSchemaLiteral = {
-  version: 0,
+  version: 1,
   primaryKey: "id",
   type: "object",
   properties: {
@@ -27,6 +27,10 @@ export const taskSchemaLiteral = {
     },
     createdAt: {
       type: "number",
+    },
+    order: {
+      type: "number",
+      default: 0,
     },
   },
   required: ["id", "title", "status", "points", "createdAt"],
