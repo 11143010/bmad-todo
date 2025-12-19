@@ -241,7 +241,7 @@ const saveEdit = async (): Promise<void> => {
             box-shadow: 0 0 10px var(--nebula-cyan);
           "
         ></div>
-        <h2 class="text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
+        <h2 class="text-sm font-bold uppercase tracking-[0.25em] text-zinc-400">
           {{ t("plate.title") }} // 0{{ taskStore.tasks.length }}
         </h2>
       </div>
@@ -265,7 +265,7 @@ const saveEdit = async (): Promise<void> => {
       <div class="flex items-center gap-1 ml-2">
         <button
           @click="sortBy = 'newest'"
-          class="text-[10px] px-2 py-1 rounded transition-colors"
+          class="text-sm px-2 py-1 rounded transition-colors"
           :class="
             sortBy === 'newest'
               ? 'bg-zinc-800 text-green-400'
@@ -276,7 +276,7 @@ const saveEdit = async (): Promise<void> => {
         </button>
         <button
           @click="sortBy = 'points-desc'"
-          class="text-[10px] px-2 py-1 rounded transition-colors"
+          class="text-sm px-2 py-1 rounded transition-colors"
           :class="
             sortBy === 'points-desc'
               ? 'bg-zinc-800 text-green-400'
@@ -287,7 +287,7 @@ const saveEdit = async (): Promise<void> => {
         </button>
         <button
           @click="sortBy = 'points-asc'"
-          class="text-[10px] px-2 py-1 rounded transition-colors"
+          class="text-sm px-2 py-1 rounded transition-colors"
           :class="
             sortBy === 'points-asc'
               ? 'bg-zinc-800 text-green-400'
@@ -298,7 +298,7 @@ const saveEdit = async (): Promise<void> => {
         </button>
         <button
           @click="sortBy = 'manual'"
-          class="text-[10px] px-2 py-1 rounded transition-colors"
+          class="text-sm px-2 py-1 rounded transition-colors"
           :class="
             sortBy === 'manual'
               ? 'bg-zinc-800 text-purple-400'
@@ -312,7 +312,7 @@ const saveEdit = async (): Promise<void> => {
         <!-- Search Toggle -->
         <button
           @click="isSearchVisible = !isSearchVisible"
-          class="text-[10px] px-2 py-1 rounded transition-colors ml-2"
+          class="text-sm px-2 py-1 rounded transition-colors ml-2"
           :class="
             isSearchVisible || searchQuery
               ? 'bg-zinc-800 text-cyan-400'
@@ -358,13 +358,13 @@ const saveEdit = async (): Promise<void> => {
         </div>
         <p
           v-if="searchQuery && sortedTasks.length === 0"
-          class="text-xs text-zinc-500 mt-2 text-center"
+          class="text-sm text-zinc-500 mt-2 text-center"
         >
           {{ t("plate.noResults") || "No tasks found" }}
         </p>
         <p
           v-else-if="searchQuery"
-          class="text-xs text-zinc-500 mt-2 text-center"
+          class="text-sm text-zinc-500 mt-2 text-center"
         >
           {{ sortedTasks.length }} {{ t("plate.found") || "found" }}
         </p>
@@ -447,13 +447,13 @@ const saveEdit = async (): Promise<void> => {
                   />
                   <button
                     @click="saveEdit"
-                    class="text-green-500 hover:text-green-400 text-xs"
+                    class="text-green-500 hover:text-green-400 text-sm"
                   >
                     ✓
                   </button>
                   <button
                     @click="cancelEdit"
-                    class="text-zinc-500 hover:text-zinc-300 text-xs"
+                    class="text-zinc-500 hover:text-zinc-300 text-sm"
                   >
                     ✕
                   </button>
@@ -473,7 +473,7 @@ const saveEdit = async (): Promise<void> => {
                   <span
                     v-for="tag in tagStore.getTaskTags(task.id)"
                     :key="tag.id"
-                    class="text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1"
+                    class="text-sm px-2 py-0.5 rounded-full flex items-center gap-1"
                     :style="{
                       backgroundColor: tag.color + '20',
                       color: tag.color,
@@ -483,7 +483,7 @@ const saveEdit = async (): Promise<void> => {
                   </span>
                 </div>
                 <p
-                  class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider"
+                  class="text-sm text-zinc-500 font-mono uppercase tracking-wider"
                 >
                   ID: {{ task.id.slice(0, 4) }} //
                   {{ formatDate(task.createdAt) }}
@@ -564,7 +564,7 @@ const saveEdit = async (): Promise<void> => {
               <button
                 v-if="task.points === 0"
                 @click="openEstimator(task.id)"
-                class="px-3 py-1 bg-zinc-950 border border-zinc-800 text-zinc-500 text-[10px] font-bold uppercase tracking-widest hover:border-zinc-600 hover:text-zinc-300 transition-all"
+                class="px-3 py-1 bg-zinc-950 border border-zinc-800 text-zinc-500 text-sm font-bold uppercase tracking-widest hover:border-zinc-600 hover:text-zinc-300 transition-all"
               >
                 {{ t("task.weigh") }}
               </button>
@@ -585,7 +585,7 @@ const saveEdit = async (): Promise<void> => {
                   {{ task.points }}
                 </div>
                 <div
-                  class="text-[9px] text-zinc-600 uppercase font-bold tracking-tighter"
+                  class="text-[10px] text-zinc-600 uppercase font-bold tracking-tighter"
                 >
                   PTS
                 </div>

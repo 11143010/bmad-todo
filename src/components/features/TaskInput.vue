@@ -57,7 +57,7 @@ const handleSubmit = async (): Promise<void> => {
         <!-- Enter Key Hint -->
         <div
           v-if="newTaskTitle"
-          class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono border rounded px-2 py-1 pointer-events-none transition-all"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-mono border rounded px-2 py-1 pointer-events-none transition-all"
           :class="
             isFocused
               ? 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10'
@@ -85,7 +85,7 @@ const handleSubmit = async (): Promise<void> => {
     <!-- Kitchen Closed Feedback -->
     <p
       v-if="stress.isSystemOverloaded"
-      class="absolute -bottom-6 left-0 text-xs font-bold animate-pulse"
+      class="absolute -bottom-6 left-0 text-sm font-bold animate-pulse"
       style="color: var(--nebula-pink)"
     >
       {{ t("input.kitchenClosed") }}

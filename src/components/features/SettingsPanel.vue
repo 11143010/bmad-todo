@@ -117,7 +117,7 @@ const presets = computed(() => [
                 v-for="preset in presets"
                 :key="preset.value"
                 @click="settings.setDailyLimit(preset.value)"
-                class="preset-btn flex flex-col items-center p-2 rounded-lg border transition-all text-xs"
+                class="preset-btn flex flex-col items-center p-2 rounded-lg border transition-all text-sm"
                 :class="
                   settings.dailyLimit === preset.value
                     ? 'preset-btn-active'
@@ -144,7 +144,7 @@ const presets = computed(() => [
               "
               class="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-500"
             />
-            <p class="text-xs text-zinc-600">
+            <p class="text-sm text-zinc-600">
               {{
                 currentLocale === "zh-TW"
                   ? "設定你的每日工作容量。建議從 100 開始。"
@@ -225,14 +225,14 @@ const presets = computed(() => [
             <div class="flex gap-1">
               <button
                 @click="switchLocale('zh-TW')"
-                class="lang-btn px-3 py-1 text-xs rounded transition-colors"
+                class="lang-btn px-3 py-1 text-sm rounded transition-colors"
                 :class="currentLocale === 'zh-TW' ? 'lang-btn-active' : ''"
               >
                 中文
               </button>
               <button
                 @click="switchLocale('en')"
-                class="lang-btn px-3 py-1 text-xs rounded transition-colors"
+                class="lang-btn px-3 py-1 text-sm rounded transition-colors"
                 :class="currentLocale === 'en' ? 'lang-btn-active' : ''"
               >
                 EN
