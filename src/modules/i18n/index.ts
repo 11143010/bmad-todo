@@ -21,7 +21,7 @@ const translations = {
     "plate.sort.manual": "手動排序",
 
     // Task
-    "task.weigh": "稱重",
+    "task.weigh": "評估",
     "task.delete": "刪除任務",
     "task.edit": "雙擊編輯",
     "task.chop": "切碎任務",
@@ -113,7 +113,7 @@ const translations = {
     "plate.sort.manual": "Manual (drag to reorder)",
 
     // Task
-    "task.weigh": "Weigh",
+    "task.weigh": "Estimate",
     "task.delete": "Delete Task",
     "task.edit": "Double-click to edit",
     "task.chop": "Chop Task",
