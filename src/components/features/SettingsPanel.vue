@@ -84,16 +84,16 @@ const presets = computed(() => [
     >
       <div
         v-if="isOpen"
-        class="fixed top-20 right-4 p-6 bg-zinc-900/95 backdrop-blur-lg border border-zinc-700 rounded-2xl shadow-2xl w-80 text-zinc-100 z-40"
+        class="settings-panel fixed top-20 right-4 p-6 rounded-2xl shadow-2xl w-80 text-zinc-100 z-40"
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-lg font-bold text-white">
+          <h2 class="text-lg font-bold gradient-text">
             ⚙️ {{ t("settings.title") }}
           </h2>
           <button
             @click="toggle"
-            class="text-zinc-500 hover:text-white transition-colors"
+            class="text-zinc-500 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10"
           >
             ✕
           </button>
@@ -104,9 +104,11 @@ const presets = computed(() => [
           <div class="space-y-3">
             <label class="flex justify-between text-sm">
               <span class="text-zinc-400">{{ t("settings.dailyLimit") }}</span>
-              <span class="font-mono font-bold text-green-400 text-lg">{{
-                settings.dailyLimit
-              }}</span>
+              <span
+                class="font-mono font-bold text-lg"
+                style="color: var(--nebula-cyan)"
+                >{{ settings.dailyLimit }}</span
+              >
             </label>
 
             <!-- Quick Presets -->
@@ -115,11 +117,11 @@ const presets = computed(() => [
                 v-for="preset in presets"
                 :key="preset.value"
                 @click="settings.setDailyLimit(preset.value)"
-                class="flex flex-col items-center p-2 rounded-lg border transition-all text-xs"
+                class="preset-btn flex flex-col items-center p-2 rounded-lg border transition-all text-xs"
                 :class="
                   settings.dailyLimit === preset.value
-                    ? 'border-green-500 bg-green-500/10 text-green-400'
-                    : 'border-zinc-700 hover:border-zinc-500 text-zinc-400'
+                    ? 'preset-btn-active'
+                    : ''
                 "
               >
                 <span class="text-lg">{{ preset.emoji }}</span>
@@ -152,7 +154,17 @@ const presets = computed(() => [
           </div>
 
           <!-- Divider -->
-          <div class="border-t border-zinc-800"></div>
+          <div
+            class="h-px"
+            style="
+              background: linear-gradient(
+                90deg,
+                transparent,
+                var(--glass-border),
+                transparent
+              );
+            "
+          ></div>
 
           <!-- Toggles -->
           <div class="space-y-4">
@@ -163,8 +175,8 @@ const presets = computed(() => [
               </div>
               <button
                 @click="settings.toggleSound()"
-                class="w-14 h-7 rounded-full transition-all relative"
-                :class="settings.soundEnabled ? 'bg-green-500' : 'bg-zinc-700'"
+                class="toggle-btn w-14 h-7 rounded-full transition-all relative"
+                :class="settings.soundEnabled ? 'toggle-btn-on' : ''"
               >
                 <div
                   class="w-5 h-5 rounded-full bg-white absolute top-1 transition-all shadow-md"
@@ -180,10 +192,8 @@ const presets = computed(() => [
               </div>
               <button
                 @click="settings.toggleHaptics()"
-                class="w-14 h-7 rounded-full transition-all relative"
-                :class="
-                  settings.hapticsEnabled ? 'bg-green-500' : 'bg-zinc-700'
-                "
+                class="toggle-btn w-14 h-7 rounded-full transition-all relative"
+                :class="settings.hapticsEnabled ? 'toggle-btn-on' : ''"
               >
                 <div
                   class="w-5 h-5 rounded-full bg-white absolute top-1 transition-all shadow-md"
@@ -194,7 +204,17 @@ const presets = computed(() => [
           </div>
 
           <!-- Divider -->
-          <div class="border-t border-zinc-800"></div>
+          <div
+            class="h-px"
+            style="
+              background: linear-gradient(
+                90deg,
+                transparent,
+                var(--glass-border),
+                transparent
+              );
+            "
+          ></div>
 
           <!-- Language -->
           <div class="flex items-center justify-between">
@@ -205,23 +225,15 @@ const presets = computed(() => [
             <div class="flex gap-1">
               <button
                 @click="switchLocale('zh-TW')"
-                class="px-3 py-1 text-xs rounded transition-colors"
-                :class="
-                  currentLocale === 'zh-TW'
-                    ? 'bg-green-500/20 text-green-400 border border-green-500'
-                    : 'border border-zinc-700 text-zinc-500 hover:border-zinc-500'
-                "
+                class="lang-btn px-3 py-1 text-xs rounded transition-colors"
+                :class="currentLocale === 'zh-TW' ? 'lang-btn-active' : ''"
               >
                 中文
               </button>
               <button
                 @click="switchLocale('en')"
-                class="px-3 py-1 text-xs rounded transition-colors"
-                :class="
-                  currentLocale === 'en'
-                    ? 'bg-green-500/20 text-green-400 border border-green-500'
-                    : 'border border-zinc-700 text-zinc-500 hover:border-zinc-500'
-                "
+                class="lang-btn px-3 py-1 text-xs rounded transition-colors"
+                :class="currentLocale === 'en' ? 'lang-btn-active' : ''"
               >
                 EN
               </button>
@@ -230,12 +242,26 @@ const presets = computed(() => [
         </div>
 
         <!-- Footer -->
-        <div class="mt-6 pt-4 border-t border-zinc-800 space-y-2">
-          <p class="text-[10px] text-zinc-600 text-center font-mono">
-            BMad v1.0 // 代謝管理系統
+        <div
+          class="mt-6 pt-4 space-y-2"
+          style="border-top: 1px solid var(--glass-border)"
+        >
+          <p
+            class="text-[10px] text-zinc-500 text-center font-mono gradient-text"
+          >
+            BMad v1.0 // 壓力管理系統
           </p>
-          <p class="text-[10px] text-zinc-700 text-center">
-            按 <kbd class="bg-zinc-800 px-1 rounded">?</kbd> 查看快捷鍵
+          <p class="text-[10px] text-zinc-600 text-center">
+            按
+            <kbd
+              class="px-1 rounded"
+              style="
+                background: var(--glass-bg);
+                border: 1px solid var(--glass-border);
+              "
+              >?</kbd
+            >
+            查看快捷鍵
           </p>
         </div>
       </div>
@@ -273,5 +299,75 @@ const presets = computed(() => [
 .top-btn-active {
   border-color: var(--nebula-cyan);
   box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+/* Settings Panel */
+.settings-panel {
+  background: rgba(15, 15, 26, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(139, 92, 246, 0.1);
+}
+
+/* Preset Buttons */
+.preset-btn {
+  border-color: var(--glass-border);
+  color: var(--stardust);
+}
+
+.preset-btn:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.preset-btn-active {
+  border-color: var(--nebula-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--nebula-cyan);
+}
+
+/* Toggle Buttons */
+.toggle-btn {
+  background: var(--space-light);
+}
+
+.toggle-btn-on {
+  background: linear-gradient(90deg, var(--nebula-cyan), var(--nebula-purple));
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
+/* Language Buttons */
+.lang-btn {
+  border: 1px solid var(--glass-border);
+  color: var(--stardust);
+}
+
+.lang-btn:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.lang-btn-active {
+  border-color: var(--nebula-cyan);
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--nebula-cyan);
+}
+
+/* Slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: var(--space-light);
+  border-radius: 8px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--nebula-cyan), var(--nebula-purple));
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--nebula-cyan);
 }
 </style>
