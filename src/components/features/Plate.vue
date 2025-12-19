@@ -400,18 +400,18 @@ const saveEdit = async (): Promise<void> => {
       item-key="id"
       tag="div"
       class="space-y-4"
-      handle=".drag-handle"
       ghost-class="opacity-50"
+      drag-class="dragging"
       @start="onDragStart"
       @end="onDragEnd"
     >
       <template #item="{ element: task }">
         <div
-          class="task-card group relative overflow-hidden rounded-xl p-5 transition-all duration-300"
+          class="task-card group relative overflow-hidden rounded-xl p-5 transition-all duration-300 cursor-grab active:cursor-grabbing"
         >
-          <!-- Hover Glow Effect / Drag Handle -->
+          <!-- Side Indicator -->
           <div
-            class="drag-handle absolute top-0 left-0 w-1 h-full transition-all duration-300 cursor-grab active:cursor-grabbing"
+            class="absolute top-0 left-0 w-1 h-full transition-all duration-300"
             style="background: var(--glass-border)"
             :style="{
               background:
