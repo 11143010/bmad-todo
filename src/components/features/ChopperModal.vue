@@ -52,34 +52,66 @@ onMounted(() => {
 
 <template>
   <div
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/90 backdrop-blur-sm animate-in fade-in duration-200"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200"
+    style="
+      background: linear-gradient(
+        180deg,
+        rgba(10, 10, 20, 0.98) 0%,
+        rgba(26, 10, 42, 0.95) 100%
+      );
+    "
     @click.self="emit('close')"
   >
+    <!-- Nebula Glow -->
     <div
-      class="w-full max-w-md bg-zinc-900 border-2 border-red-900/50 rounded-2xl shadow-2xl shadow-red-900/20 overflow-hidden flex flex-col max-h-[90vh]"
+      class="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full pointer-events-none"
+      style="
+        background: radial-gradient(
+          circle,
+          rgba(139, 92, 246, 0.15) 0%,
+          transparent 70%
+        );
+        filter: blur(60px);
+      "
+    ></div>
+
+    <div
+      class="chopper-panel w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
     >
       <!-- Header -->
       <div
-        class="bg-zinc-950 p-6 border-b border-red-900/30 flex items-start justify-between relative overflow-hidden"
+        class="p-6 border-b flex items-start justify-between relative overflow-hidden"
+        style="
+          background: rgba(10, 10, 26, 0.8);
+          border-color: var(--glass-border);
+        "
       >
-        <!-- Background Decor -->
+        <!-- Background Glow -->
         <div
-          class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#450a0a_10px,#450a0a_11px)] opacity-20"
+          class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full pointer-events-none"
+          style="
+            background: radial-gradient(
+              circle,
+              rgba(139, 92, 246, 0.2) 0%,
+              transparent 70%
+            );
+            filter: blur(25px);
+          "
         ></div>
 
         <div class="relative z-10">
           <h2
-            class="text-red-500 font-black text-2xl uppercase tracking-tighter flex items-center gap-2"
+            class="font-black text-2xl uppercase tracking-tighter flex items-center gap-2 gradient-text"
           >
             <span>🔪</span> 任務切碎機
           </h2>
           <p class="text-zinc-500 text-xs font-mono mt-1">
-            SPLITTING_PROTOCOL_INITIATED // 切分程序已啟動
+            SPLITTING_PROTOCOL // 分割程序
           </p>
         </div>
         <button
           @click="emit('close')"
-          class="text-zinc-500 hover:text-white transition-colors relative z-10"
+          class="text-zinc-500 hover:text-white transition-colors relative z-10 p-1 rounded-full hover:bg-white/10"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +125,7 @@ onMounted(() => {
             stroke-linejoin="round"
           >
             <path d="M18 6 6 18" />
-            <path d="m6 6 18 18" />
+            <path d="m6 6 12 12" />
           </svg>
         </button>
       </div>
@@ -130,7 +162,7 @@ onMounted(() => {
               ref="inputRefs"
               v-model="newTitles[index]"
               type="text"
-              class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-200 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all placeholder-zinc-700"
+              class="chopper-input flex-1 rounded-lg px-4 py-3 text-zinc-200 transition-all placeholder-zinc-600"
               placeholder="輸入子任務..."
               @keydown.enter="
                 index === newTitles.length - 1 ? addSlice() : null
@@ -183,10 +215,16 @@ onMounted(() => {
       </div>
 
       <!-- Footer -->
-      <div class="p-6 bg-zinc-950 border-t border-zinc-900">
+      <div
+        class="p-6"
+        style="
+          background: rgba(10, 10, 26, 0.8);
+          border-top: 1px solid var(--glass-border);
+        "
+      >
         <button
           @click="executeChop"
-          class="w-full bg-red-600 hover:bg-red-500 text-white font-black text-lg py-4 rounded-xl shadow-lg shadow-red-900/30 active:scale-95 transition-all flex items-center justify-center gap-2 group"
+          class="chopper-execute-btn w-full text-white font-black text-lg py-4 rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2 group"
           :disabled="newTitles.filter((t) => t.trim().length > 0).length < 2"
           :class="
             newTitles.filter((t) => t.trim().length > 0).length < 2
@@ -201,3 +239,35 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.chopper-panel {
+  background: rgba(15, 15, 26, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(139, 92, 246, 0.1);
+}
+
+.chopper-input {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.chopper-input:focus {
+  outline: none;
+  border-color: var(--nebula-purple);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+.chopper-execute-btn {
+  background: linear-gradient(135deg, var(--nebula-purple), var(--nebula-pink));
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+}
+
+.chopper-execute-btn:hover:not(:disabled) {
+  box-shadow: 0 0 35px rgba(236, 72, 153, 0.5);
+}
+</style>

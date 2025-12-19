@@ -65,12 +65,32 @@ const confirmShutdown = async () => {
     >
       <div
         v-if="showModal"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/95 backdrop-blur-sm"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+        style="
+          background: linear-gradient(
+            180deg,
+            rgba(10, 10, 20, 0.98) 0%,
+            rgba(26, 10, 42, 0.95) 100%
+          );
+        "
       >
-        <!-- Close Button (same position as shutdown button) -->
+        <!-- Nebula Glow -->
+        <div
+          class="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full pointer-events-none"
+          style="
+            background: radial-gradient(
+              circle,
+              rgba(139, 92, 246, 0.2) 0%,
+              transparent 70%
+            );
+            filter: blur(60px);
+          "
+        ></div>
+
+        <!-- Close Button -->
         <button
           @click="cancel"
-          class="fixed top-4 right-[8rem] z-50 p-3 bg-zinc-800 hover:bg-zinc-700 rounded-full text-zinc-400 hover:text-white transition-all border border-zinc-700"
+          class="shutdown-btn fixed top-4 right-[8rem] z-50 p-3 rounded-full text-zinc-400 hover:text-white transition-all"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -89,16 +109,24 @@ const confirmShutdown = async () => {
         </button>
 
         <div
-          class="w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-2xl p-8 space-y-8 relative overflow-hidden text-center"
+          class="shutdown-panel w-full max-w-sm rounded-2xl p-8 space-y-8 relative overflow-hidden text-center"
         >
           <!-- Background Glow -->
           <div
-            class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-red-500/20 blur-3xl rounded-full pointer-events-none"
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full pointer-events-none"
+            style="
+              background: radial-gradient(
+                circle,
+                rgba(139, 92, 246, 0.3) 0%,
+                transparent 70%
+              );
+              filter: blur(30px);
+            "
           ></div>
 
           <div class="relative z-10 space-y-2">
             <h2
-              class="text-3xl font-black text-white uppercase tracking-tighter"
+              class="text-3xl font-black uppercase tracking-tighter gradient-text"
             >
               {{ t("shutdown.title") }}
             </h2>
@@ -110,12 +138,16 @@ const confirmShutdown = async () => {
           <div class="py-8 space-y-4">
             <div v-if="analytics.currentLog" class="space-y-1">
               <div
-                class="text-6xl font-black text-white tabular-nums tracking-tighter"
+                class="text-6xl font-black tabular-nums tracking-tighter"
+                style="
+                  color: var(--nebula-cyan);
+                  text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+                "
               >
                 {{ analytics.currentLog.totalPoints }}
               </div>
               <div
-                class="text-zinc-500 text-xs font-bold uppercase tracking-widest"
+                class="text-zinc-400 text-xs font-bold uppercase tracking-widest"
               >
                 {{ t("shutdown.todayPoints") }}
               </div>
@@ -127,13 +159,13 @@ const confirmShutdown = async () => {
             <button
               @click="cancel"
               data-close-modal
-              class="py-4 rounded-xl border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all font-bold"
+              class="cancel-btn py-4 rounded-xl font-bold transition-all"
             >
               {{ t("shutdown.cancel") }}
             </button>
             <button
               @click="confirmShutdown"
-              class="py-4 rounded-xl bg-red-600 text-white hover:bg-red-500 shadow-lg shadow-red-900/50 transition-all font-black"
+              class="confirm-btn py-4 rounded-xl text-white font-black transition-all"
             >
               {{ t("shutdown.confirm") }}
             </button>
@@ -143,3 +175,37 @@ const confirmShutdown = async () => {
     </Transition>
   </Teleport>
 </template>
+
+<style scoped>
+.shutdown-panel {
+  background: rgba(15, 15, 26, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(139, 92, 246, 0.1);
+}
+
+.cancel-btn {
+  border: 1px solid var(--glass-border);
+  color: var(--stardust);
+  background: transparent;
+}
+
+.cancel-btn:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  color: white;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, var(--nebula-purple), var(--nebula-pink));
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+}
+
+.confirm-btn:hover {
+  box-shadow: 0 0 35px rgba(236, 72, 153, 0.5);
+  transform: translateY(-1px);
+}
+</style>
