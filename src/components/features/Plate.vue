@@ -5,6 +5,7 @@ import { useTagStore } from "@/stores/tag.store";
 import CaloricEstimator from "@/components/features/CaloricEstimator.vue";
 import ChopperModal from "@/components/features/ChopperModal.vue";
 import TagSelector from "@/components/features/TagSelector.vue";
+import StardustBurst from "@/components/features/StardustBurst.vue";
 import { useI18n } from "@/modules/i18n";
 
 const { t } = useI18n();
@@ -17,6 +18,9 @@ onMounted(() => {
 });
 
 const taggingTaskId = ref<string | null>(null);
+
+// Stardust burst animation state
+const burstPosition = ref<{ x: number; y: number } | null>(null);
 
 const estimatingTaskId = ref<string | null>(null);
 const choppingTaskId = ref<string | null>(null);
@@ -106,6 +110,32 @@ const handleChop = async (newTitles: string[]): Promise<void> => {
     await taskStore.chopTask(choppingTaskId.value, newTitles);
     closeChopper();
   }
+};
+
+/**
+ * Handle task completion with stardust animation
+ * @param {MouseEvent} event - Click event for position
+ * @param {string} taskId - The task ID to complete
+ */
+const handleTaskComplete = async (
+  event: MouseEvent,
+  taskId: string
+): Promise<void> => {
+  // Get click position for burst animation
+  burstPosition.value = {
+    x: event.clientX,
+    y: event.clientY,
+  };
+
+  // Complete the task
+  await taskStore.completeTask(taskId);
+};
+
+/**
+ * Clear the burst animation
+ */
+const clearBurst = (): void => {
+  burstPosition.value = null;
 };
 
 // Edit mode
@@ -256,7 +286,7 @@ const saveEdit = async (): Promise<void> => {
           <div class="flex items-start space-x-4">
             <!-- Check Button -->
             <button
-              @click="taskStore.completeTask(task.id)"
+              @click="handleTaskComplete($event, task.id)"
               class="mt-1 w-5 h-5 rounded border border-zinc-600 hover:border-green-400 hover:bg-green-500/10 transition-all flex items-center justify-center group/check shrink-0 relative overflow-hidden"
             >
               <div
@@ -443,6 +473,16 @@ const saveEdit = async (): Promise<void> => {
         :taskTitle="choppingTaskTitle"
         @chop="handleChop"
         @close="closeChopper"
+      />
+    </Teleport>
+
+    <!-- Stardust Burst Animation -->
+    <Teleport to="body">
+      <StardustBurst
+        v-if="burstPosition"
+        :x="burstPosition.x"
+        :y="burstPosition.y"
+        @complete="clearBurst"
       />
     </Teleport>
   </div>
