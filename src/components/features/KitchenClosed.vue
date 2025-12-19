@@ -3,13 +3,16 @@ import { ref } from "vue";
 import { useMetabolismStore } from "@/stores/metabolism.store";
 import { useI18n } from "@/modules/i18n";
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const metabolism = useMetabolismStore();
 const holdProgress = ref(0);
 const isMinimized = ref(false);
 let holdInterval: number | null = null;
 
-const startHold = () => {
+/**
+ * Start the hold-to-override timer
+ */
+const startHold = (): void => {
   if (holdInterval) return;
   holdInterval = setInterval(() => {
     holdProgress.value += 5;
@@ -19,7 +22,10 @@ const startHold = () => {
   }, 50);
 };
 
-const stopHold = () => {
+/**
+ * Stop the hold timer and reset progress
+ */
+const stopHold = (): void => {
   if (holdInterval) {
     clearInterval(holdInterval);
     holdInterval = null;
@@ -27,25 +33,68 @@ const stopHold = () => {
   holdProgress.value = 0;
 };
 
-const completeOverride = () => {
+/**
+ * Complete the override action
+ */
+const completeOverride = (): void => {
   stopHold();
   metabolism.activateOverride();
 };
 
-const enterDigestionMode = () => {
+/**
+ * Minimize to focus mode banner
+ */
+const enterFocusMode = (): void => {
   isMinimized.value = true;
 };
 </script>
 
 <template>
+  <!-- System Overload Modal -->
   <div
     v-if="!isMinimized"
-    class="fixed inset-0 z-50 bg-zinc-950/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-500"
+    class="fixed inset-0 z-50 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-500"
+    style="
+      background: linear-gradient(
+        180deg,
+        rgba(10, 10, 20, 0.98) 0%,
+        rgba(26, 10, 42, 0.95) 100%
+      );
+    "
   >
-    <!-- Icon -->
-    <div class="mb-6 text-6xl animate-pulse">⛔️</div>
+    <!-- Nebula Glow -->
+    <div
+      class="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full pointer-events-none"
+      style="
+        background: radial-gradient(
+          circle,
+          rgba(236, 72, 153, 0.2) 0%,
+          transparent 70%
+        );
+        filter: blur(60px);
+      "
+    ></div>
 
-    <h1 class="text-4xl font-black text-white mb-4 tracking-tighter">
+    <!-- Warning Icon -->
+    <div
+      class="mb-6 text-6xl animate-pulse"
+      style="filter: drop-shadow(0 0 30px rgba(236, 72, 153, 0.5))"
+    >
+      ⚠️
+    </div>
+
+    <h1
+      class="text-4xl font-black mb-4 tracking-tighter"
+      style="
+        background: linear-gradient(
+          135deg,
+          var(--nebula-pink),
+          var(--nebula-violet)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      "
+    >
       {{ t("kitchen.title") }}
     </h1>
 
@@ -54,16 +103,20 @@ const enterDigestionMode = () => {
     </div>
 
     <div class="space-y-4 w-full max-w-xs">
-      <!-- Digestion Mode Button -->
+      <!-- Focus Mode Button -->
       <button
-        @click="enterDigestionMode"
-        class="w-full px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-green-500/20 active:scale-95 flex items-center justify-center space-x-2"
+        @click="enterFocusMode"
+        class="w-full px-8 py-4 font-bold rounded-xl transition-all shadow-lg active:scale-95 flex items-center justify-center space-x-2"
+        style="
+          background: linear-gradient(
+            135deg,
+            var(--nebula-cyan),
+            var(--nebula-purple)
+          );
+          box-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+        "
       >
-        <span>{{
-          locale === "zh-TW"
-            ? "開始消化 (完成任務)"
-            : "Start Digesting (Complete Tasks)"
-        }}</span>
+        <span class="text-white">{{ t("kitchen.digest") }}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -74,6 +127,7 @@ const enterDigestionMode = () => {
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
+          class="text-white"
         >
           <path d="M5 12h14" />
           <path d="m12 5 7 7-7 7" />
@@ -88,17 +142,21 @@ const enterDigestionMode = () => {
           @mouseup="stopHold"
           @touchend.prevent="stopHold"
           @mouseleave="stopHold"
-          class="w-full relative px-8 py-3 bg-zinc-900 border border-zinc-800 text-zinc-500 font-bold rounded-xl overflow-hidden transition-all active:scale-95 select-none hover:text-zinc-300"
+          class="w-full relative px-8 py-3 font-bold rounded-xl overflow-hidden transition-all active:scale-95 select-none"
+          style="
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+          "
         >
-          <span class="relative z-10 text-sm">{{
-            locale === "zh-TW"
-              ? "我必須吃更多 (長按強制)"
-              : "I need more (Hold to force)"
-          }}</span>
+          <span class="relative z-10 text-sm text-zinc-500 hover:text-zinc-300">
+            {{ t("kitchen.override") }}
+          </span>
 
           <!-- Progress Fill -->
           <div
-            class="absolute inset-y-0 left-0 bg-red-600/20 transition-all duration-75 ease-linear"
+            class="absolute inset-y-0 left-0 transition-all duration-75 ease-linear"
+            style="background: rgba(236, 72, 153, 0.2)"
             :style="{ width: `${holdProgress}%` }"
           ></div>
         </button>
@@ -106,29 +164,39 @@ const enterDigestionMode = () => {
     </div>
   </div>
 
-  <!-- Minimized Banner -->
+  <!-- Minimized Focus Mode Banner -->
   <div
     v-else
-    class="fixed bottom-0 inset-x-0 z-50 bg-red-900/90 backdrop-blur border-t border-red-700 p-4 flex justify-between items-center animate-in slide-in-from-bottom duration-300"
+    class="fixed bottom-0 inset-x-0 z-50 backdrop-blur p-4 flex justify-between items-center animate-in slide-in-from-bottom duration-300"
+    style="
+      background: linear-gradient(
+        90deg,
+        rgba(236, 72, 153, 0.15),
+        rgba(139, 92, 246, 0.15)
+      );
+      border-top: 1px solid rgba(236, 72, 153, 0.3);
+    "
   >
     <div class="flex items-center space-x-3 text-white">
-      <span class="text-2xl">⛔️</span>
+      <span
+        class="text-2xl"
+        style="filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.5))"
+      >
+        🚀
+      </span>
       <div>
-        <h3 class="font-bold text-sm">
-          {{ locale === "zh-TW" ? "消化模式" : "Digestion Mode" }}
+        <h3 class="font-bold text-sm gradient-text">
+          {{ t("kitchen.focusMode") }}
         </h3>
-        <p class="text-xs text-red-200">
-          {{
-            locale === "zh-TW"
-              ? "無法新增任務，請專注完成現有項目。"
-              : "Cannot add tasks. Focus on completing existing ones."
-          }}
+        <p class="text-xs text-zinc-400">
+          {{ t("kitchen.focusMessage") }}
         </p>
       </div>
     </div>
     <button
       @click="isMinimized = false"
-      class="p-2 hover:bg-black/20 rounded-full transition-colors text-white/70 hover:text-white"
+      class="p-2 rounded-full transition-colors"
+      style="background: var(--glass-bg); border: 1px solid var(--glass-border)"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -140,6 +208,7 @@ const enterDigestionMode = () => {
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
+        class="text-zinc-400"
       >
         <path d="m18 15-6-6-6 6" />
       </svg>

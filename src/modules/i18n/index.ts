@@ -33,11 +33,11 @@ const translations = {
 
     // Input
     "input.placeholder": "你在想什麼？",
-    "input.kitchenClosed": "廚房已關閉 - 請先消化現有任務",
+    "input.kitchenClosed": "系統超載 - 請先處理現有任務",
 
     // Settings
     "settings.title": "壓力設定",
-    "settings.dailyLimit": "每日熱量上限",
+    "settings.dailyLimit": "每日壓力上限",
     "settings.sound": "音效",
     "settings.haptics": "觸覺回饋",
     "settings.preset.easy": "輕鬆",
@@ -64,10 +64,14 @@ const translations = {
     "shutdown.todayPoints": "今日累積",
     "shutdown.tasksCompleted": "任務完成",
 
-    // Kitchen Closed
-    "kitchen.title": "廚房已關閉",
-    "kitchen.subtitle": "系統超載",
-    "kitchen.message": "你的代謝系統已經超載。完成一些任務來恢復處理能力。",
+    // Overload Modal (was Kitchen Closed)
+    "kitchen.title": "系統超載",
+    "kitchen.subtitle": "壓力超出負荷",
+    "kitchen.message": "你的系統已經超載。完成一些任務來釋放壓力。",
+    "kitchen.digest": "開始處理任務",
+    "kitchen.override": "我必須繼續（長按強制）",
+    "kitchen.focusMode": "專注模式",
+    "kitchen.focusMessage": "無法新增任務，請專注完成現有項目。",
 
     // PWA
     "pwa.offline": "你目前處於離線狀態，但資料會保存在本地",
@@ -78,7 +82,7 @@ const translations = {
 
     // Estimator
     "estimator.title": "這個任務有多重？",
-    "estimator.subtitle": "選擇一個卡路里等級",
+    "estimator.subtitle": "選擇一個壓力等級",
 
     // Chopper
     "chopper.title": "切碎任務",
@@ -116,10 +120,10 @@ const translations = {
 
     // Input
     "input.placeholder": "What's on your mind?",
-    "input.kitchenClosed": "Kitchen Closed - Digest existing tasks first",
+    "input.kitchenClosed": "System Overloaded - Handle existing tasks first",
 
     // Settings
-    "settings.title": "Metabolism Settings",
+    "settings.title": "Stress Settings",
     "settings.dailyLimit": "Daily Limit",
     "settings.sound": "Sound",
     "settings.haptics": "Haptic Feedback",
@@ -131,8 +135,8 @@ const translations = {
     "settings.shortcutHint": "Press ? for shortcuts",
 
     // Analytics
-    "analytics.title": "Metabolic Trends",
-    "analytics.subtitle": "LAST_7_CYCLES",
+    "analytics.title": "Stress Trends",
+    "analytics.subtitle": "LAST 7 DAYS",
     "analytics.points": "Points",
     "analytics.tasks": "Tasks",
     "analytics.overloads": "Overloads",
@@ -147,11 +151,16 @@ const translations = {
     "shutdown.todayPoints": "Today's Points",
     "shutdown.tasksCompleted": "Tasks Done",
 
-    // Kitchen Closed
-    "kitchen.title": "Kitchen Closed",
-    "kitchen.subtitle": "SYSTEM_OVERLOAD",
+    // Overload Modal (was Kitchen Closed)
+    "kitchen.title": "System Overload",
+    "kitchen.subtitle": "CAPACITY_EXCEEDED",
     "kitchen.message":
-      "Your metabolic system is overloaded. Complete some tasks to restore processing capacity.",
+      "Your system is overloaded. Complete some tasks to release pressure.",
+    "kitchen.digest": "Start Processing",
+    "kitchen.override": "I must continue (hold to force)",
+    "kitchen.focusMode": "Focus Mode",
+    "kitchen.focusMessage":
+      "Cannot add tasks. Focus on completing existing ones.",
 
     // PWA
     "pwa.offline": "You are offline. Data is saved locally.",
