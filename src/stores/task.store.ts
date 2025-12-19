@@ -6,11 +6,21 @@ import { v4 as uuidv4 } from "uuid";
 import { sensory } from "@/modules/sensory";
 import { useAnalyticsStore } from "./analytics.store";
 
+/** Default points for unprocessed tasks */
+const UNPROCESSED_POINTS = 0;
+
+/** Delay between staggered sound effects (ms) */
+const STAGGER_DELAY_MS = 150;
+
 export const useTaskStore = defineStore("tasks", () => {
   const tasks = ref<TaskDocType[]>([]);
   const isInitialized = ref(false);
 
-  const init = async () => {
+  /**
+   * Initialize the task store by subscribing to active tasks from the database
+   * @returns {Promise<void>}
+   */
+  const init = async (): Promise<void> => {
     if (isInitialized.value) return;
 
     const db = await getDB();
@@ -30,13 +40,18 @@ export const useTaskStore = defineStore("tasks", () => {
     isInitialized.value = true;
   };
 
-  const addTask = async (title: string) => {
+  /**
+   * Add a new task to the database
+   * @param {string} title - The task title
+   * @returns {Promise<void>}
+   */
+  const addTask = async (title: string): Promise<void> => {
     const db = await getDB();
     const newTask: TaskDocType = {
       id: uuidv4(),
       title: title.trim(),
       status: "active",
-      points: 0, // 0 = Unprocessed / Raw
+      points: UNPROCESSED_POINTS,
       createdAt: Date.now(),
     };
     await db.tasks.insert(newTask);
@@ -44,7 +59,13 @@ export const useTaskStore = defineStore("tasks", () => {
     sensory.vibrate("light");
   };
 
-  const estimateTask = async (id: string, points: number) => {
+  /**
+   * Estimate the points/weight of a task
+   * @param {string} id - The task ID
+   * @param {number} points - The estimated points value
+   * @returns {Promise<void>}
+   */
+  const estimateTask = async (id: string, points: number): Promise<void> => {
     const db = await getDB();
     const task = await db.tasks.findOne(id).exec();
     if (task) {
@@ -53,7 +74,12 @@ export const useTaskStore = defineStore("tasks", () => {
     }
   };
 
-  const completeTask = async (id: string) => {
+  /**
+   * Mark a task as completed and log analytics
+   * @param {string} id - The task ID to complete
+   * @returns {Promise<void>}
+   */
+  const completeTask = async (id: string): Promise<void> => {
     const db = await getDB();
     const task = await db.tasks.findOne(id).exec();
     if (task) {
@@ -76,13 +102,22 @@ export const useTaskStore = defineStore("tasks", () => {
         );
         const achievementStore = useAchievementStore();
         await achievementStore.checkAchievements();
-      } catch (e) {
-        // Analytics/achievements failed silently
+      } catch (error) {
+        console.warn("Analytics/achievements failed:", error);
       }
     }
   };
 
-  const chopTask = async (originalId: string, newTitles: string[]) => {
+  /**
+   * Split a task into multiple subtasks
+   * @param {string} originalId - The original task ID to chop
+   * @param {string[]} newTitles - Array of new subtask titles
+   * @returns {Promise<void>}
+   */
+  const chopTask = async (
+    originalId: string,
+    newTitles: string[]
+  ): Promise<void> => {
     const db = await getDB();
 
     // 1. Find and Remove original task
@@ -93,27 +128,35 @@ export const useTaskStore = defineStore("tasks", () => {
 
     // 2. Create new subtasks
     const timestamp = Date.now();
-    const newTasks: TaskDocType[] = newTitles.map((title, index) => ({
+    const newTasks: TaskDocType[] = newTitles.map((title, taskIndex) => ({
       id: uuidv4(),
       title: title.trim(),
       status: "active",
-      points: 0,
-      createdAt: timestamp + index, // Ensure order preservation by slight time diff
+      points: UNPROCESSED_POINTS,
+      createdAt: timestamp + taskIndex, // Ensure order preservation by slight time diff
     }));
 
     await db.tasks.bulkInsert(newTasks);
 
-    // 3. Feedback
-    // Play a burst of sounds
-    newTitles.forEach((_, i) => {
+    // 3. Feedback - Play a burst of sounds
+    newTitles.forEach((_unusedTitle, soundIndex) => {
       setTimeout(() => {
         sensory.play("add");
         sensory.vibrate("light");
-      }, i * 150); // Staggered effects
+      }, soundIndex * STAGGER_DELAY_MS);
     });
   };
 
-  const updateTaskTitle = async (id: string, newTitle: string) => {
+  /**
+   * Update the title of an existing task
+   * @param {string} id - The task ID
+   * @param {string} newTitle - The new title
+   * @returns {Promise<void>}
+   */
+  const updateTaskTitle = async (
+    id: string,
+    newTitle: string
+  ): Promise<void> => {
     const db = await getDB();
     const task = await db.tasks.findOne(id).exec();
     if (task) {
@@ -121,7 +164,12 @@ export const useTaskStore = defineStore("tasks", () => {
     }
   };
 
-  const deleteTask = async (id: string) => {
+  /**
+   * Delete a task from the database
+   * @param {string} id - The task ID to delete
+   * @returns {Promise<void>}
+   */
+  const deleteTask = async (id: string): Promise<void> => {
     const db = await getDB();
     const task = await db.tasks.findOne(id).exec();
     if (task) {
@@ -130,7 +178,11 @@ export const useTaskStore = defineStore("tasks", () => {
     }
   };
 
-  const archiveCompleted = async () => {
+  /**
+   * Archive all completed tasks by removing them from the database
+   * @returns {Promise<void>}
+   */
+  const archiveCompleted = async (): Promise<void> => {
     const db = await getDB();
     // Find all completed tasks
     const completedTasks = await db.tasks
@@ -141,7 +193,7 @@ export const useTaskStore = defineStore("tasks", () => {
       })
       .exec();
 
-    const ids = completedTasks.map((t) => t.id);
+    const ids = completedTasks.map((task) => task.id);
     if (ids.length > 0) {
       await db.tasks.find({ selector: { id: { $in: ids } } }).remove();
       sensory.play("complete"); // Final satisfaction
@@ -160,4 +212,3 @@ export const useTaskStore = defineStore("tasks", () => {
     archiveCompleted,
   };
 });
-// Force HMR Update

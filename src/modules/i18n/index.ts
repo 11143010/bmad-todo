@@ -22,6 +22,9 @@ const translations = {
     "task.edit": "雙擊編輯",
     "task.chop": "切碎任務",
 
+    // Tags
+    "tag.add": "添加標籤",
+
     // Gauge
     "gauge.normal": "壓力正常",
     "gauge.heavy": "壓力沈重",
@@ -102,6 +105,9 @@ const translations = {
     "task.edit": "Double-click to edit",
     "task.chop": "Chop Task",
 
+    // Tags
+    "tag.add": "Add Tag",
+
     // Gauge
     "gauge.normal": "Normal",
     "gauge.heavy": "Heavy Load",
@@ -169,21 +175,45 @@ const translations = {
 
 type TranslationKey = keyof (typeof translations)["zh-TW"];
 
+/** Default locale for new users */
+const DEFAULT_LOCALE: Locale = "zh-TW";
+
+/** LocalStorage key for locale preference */
+const STORAGE_KEY_LOCALE = "bmad-locale";
+
 // Reactive locale
 const currentLocale = ref<Locale>(
-  (localStorage.getItem("bmad-locale") as Locale) || "zh-TW"
+  (localStorage.getItem(STORAGE_KEY_LOCALE) as Locale) || DEFAULT_LOCALE
 );
 
-export const setLocale = (locale: Locale) => {
+/**
+ * Set the current locale and persist to localStorage
+ * @param {Locale} locale - The locale to set
+ * @returns {void}
+ */
+export const setLocale = (locale: Locale): void => {
   currentLocale.value = locale;
-  localStorage.setItem("bmad-locale", locale);
+  localStorage.setItem(STORAGE_KEY_LOCALE, locale);
 };
 
+/**
+ * Get the current locale
+ * @returns {Locale} The current locale
+ */
 export const getLocale = (): Locale => currentLocale.value;
 
+/**
+ * Vue composable for i18n functionality
+ * @returns {{ t: Function, locale: ComputedRef, setLocale: Function }}
+ */
 export const useI18n = () => {
   const locale = computed(() => currentLocale.value);
 
+  /**
+   * Translate a key to the current locale
+   * @param {TranslationKey} key - The translation key
+   * @returns {string} The translated string
+   */
   const t = (key: TranslationKey): string => {
     return translations[currentLocale.value][key] || key;
   };
@@ -191,7 +221,11 @@ export const useI18n = () => {
   return { t, locale, setLocale };
 };
 
-// Simple function for non-reactive usage
+/**
+ * Simple translation function for non-reactive usage
+ * @param {TranslationKey} key - The translation key
+ * @returns {string} The translated string
+ */
 export const t = (key: TranslationKey): string => {
   return translations[currentLocale.value][key] || key;
 };

@@ -3,16 +3,32 @@ import { ref } from "vue";
 import { getDB } from "@/modules/db";
 import type { SettingsDocType } from "@/modules/db/schemas/settings.schema";
 
+/** Default daily limit for new users */
+const DEFAULT_DAILY_LIMIT = 100;
+
+/** Default sound enabled state */
+const DEFAULT_SOUND_ENABLED = true;
+
+/** Default haptics enabled state */
+const DEFAULT_HAPTICS_ENABLED = true;
+
+/** Valid setting keys that can be updated */
+type SettingKey = "dailyLimit" | "soundEnabled" | "hapticsEnabled";
+
+/** Valid setting value types */
+type SettingValue = number | boolean;
+
 export const useSettingsStore = defineStore("settings", () => {
-  const dailyLimit = ref(100);
-  const soundEnabled = ref(true);
-  const hapticsEnabled = ref(true);
+  const dailyLimit = ref(DEFAULT_DAILY_LIMIT);
+  const soundEnabled = ref(DEFAULT_SOUND_ENABLED);
+  const hapticsEnabled = ref(DEFAULT_HAPTICS_ENABLED);
   const isInitialized = ref(false);
 
   /**
    * Initialize the store by syncing with RxDB
+   * @returns {Promise<void>}
    */
-  const init = async () => {
+  const init = async (): Promise<void> => {
     if (isInitialized.value) return;
 
     const db = await getDB();
@@ -32,10 +48,14 @@ export const useSettingsStore = defineStore("settings", () => {
 
   /**
    * Update a setting in RxDB
-   * @param key The key to update
-   * @param value The new value
+   * @param {SettingKey} key - The setting key to update
+   * @param {SettingValue} value - The new value
+   * @returns {Promise<void>}
    */
-  const updateSetting = async (key: string, value: any) => {
+  const updateSetting = async (
+    key: SettingKey,
+    value: SettingValue
+  ): Promise<void> => {
     const db = await getDB();
     // Optimistic update happens via local ref if we bound v-model to it,
     // but here we ensure the DB is the source of truth.
@@ -51,15 +71,28 @@ export const useSettingsStore = defineStore("settings", () => {
     });
   };
 
-  const setDailyLimit = async (limit: number) => {
+  /**
+   * Set the daily limit
+   * @param {number} limit - The new daily limit value
+   * @returns {Promise<void>}
+   */
+  const setDailyLimit = async (limit: number): Promise<void> => {
     await updateSetting("dailyLimit", limit);
   };
 
-  const toggleSound = async () => {
+  /**
+   * Toggle the sound enabled state
+   * @returns {Promise<void>}
+   */
+  const toggleSound = async (): Promise<void> => {
     await updateSetting("soundEnabled", !soundEnabled.value);
   };
 
-  const toggleHaptics = async () => {
+  /**
+   * Toggle the haptics enabled state
+   * @returns {Promise<void>}
+   */
+  const toggleHaptics = async (): Promise<void> => {
     await updateSetting("hapticsEnabled", !hapticsEnabled.value);
   };
 

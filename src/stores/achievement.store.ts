@@ -2,6 +2,27 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { getDB } from "@/modules/db";
 
+/** Duration to show achievement notification (ms) */
+const NOTIFICATION_DURATION_MS = 3000;
+
+/** Minimum tasks to qualify for "no overload" achievement */
+const MIN_TASKS_FOR_NO_OVERLOAD = 3;
+
+/** Days required for streak achievement */
+const STREAK_DAYS_REQUIRED = 7;
+
+/** Night owl start hour (22:00) */
+const NIGHT_OWL_START_HOUR = 22;
+
+/** Night owl end hour (05:00) */
+const NIGHT_OWL_END_HOUR = 5;
+
+/** Early bird start hour (05:00) */
+const EARLY_BIRD_START_HOUR = 5;
+
+/** Early bird end hour (07:00) */
+const EARLY_BIRD_END_HOUR = 7;
+
 export interface Achievement {
   id: string;
   name: string;
@@ -27,7 +48,7 @@ export const useAchievementStore = defineStore("achievements", () => {
       condition: async () => {
         const db = await getDB();
         const logs = await db.daily_logs.find().exec();
-        return logs.some((l) => l.tasksCompleted >= 1);
+        return logs.some((log) => log.tasksCompleted >= 1);
       },
     },
     {
@@ -39,7 +60,7 @@ export const useAchievementStore = defineStore("achievements", () => {
       condition: async () => {
         const db = await getDB();
         const logs = await db.daily_logs.find().exec();
-        const total = logs.reduce((sum, l) => sum + l.tasksCompleted, 0);
+        const total = logs.reduce((sum, log) => sum + log.tasksCompleted, 0);
         return total >= 10;
       },
     },
@@ -52,7 +73,7 @@ export const useAchievementStore = defineStore("achievements", () => {
       condition: async () => {
         const db = await getDB();
         const logs = await db.daily_logs.find().exec();
-        return logs.some((l) => l.totalPoints >= 100);
+        return logs.some((log) => log.totalPoints >= 100);
       },
     },
     {
@@ -64,7 +85,11 @@ export const useAchievementStore = defineStore("achievements", () => {
       condition: async () => {
         const db = await getDB();
         const logs = await db.daily_logs.find().exec();
-        return logs.some((l) => l.tasksCompleted >= 3 && l.overloadCount === 0);
+        return logs.some(
+          (log) =>
+            log.tasksCompleted >= MIN_TASKS_FOR_NO_OVERLOAD &&
+            log.overloadCount === 0
+        );
       },
     },
     {
@@ -76,7 +101,10 @@ export const useAchievementStore = defineStore("achievements", () => {
       condition: async () => {
         const db = await getDB();
         const logs = await db.daily_logs.find().exec();
-        return logs.filter((l) => l.tasksCompleted >= 1).length >= 7;
+        return (
+          logs.filter((log) => log.tasksCompleted >= 1).length >=
+          STREAK_DAYS_REQUIRED
+        );
       },
     },
     {
@@ -87,7 +115,7 @@ export const useAchievementStore = defineStore("achievements", () => {
       unlockedAt: null,
       condition: async () => {
         const hour = new Date().getHours();
-        return hour >= 22 || hour < 5;
+        return hour >= NIGHT_OWL_START_HOUR || hour < NIGHT_OWL_END_HOUR;
       },
     },
     {
@@ -98,21 +126,33 @@ export const useAchievementStore = defineStore("achievements", () => {
       unlockedAt: null,
       condition: async () => {
         const hour = new Date().getHours();
-        return hour >= 5 && hour < 7;
+        return hour >= EARLY_BIRD_START_HOUR && hour < EARLY_BIRD_END_HOUR;
       },
     },
   ];
 
+  /**
+   * Get all achievements with their unlock status
+   * @returns {Array} All achievements with unlocked boolean
+   */
   const allAchievements = computed(() => {
-    return achievements.map((a) => ({
-      ...a,
-      unlocked: unlockedAchievements.value.has(a.id),
+    return achievements.map((achievement) => ({
+      ...achievement,
+      unlocked: unlockedAchievements.value.has(achievement.id),
     }));
   });
 
+  /**
+   * Get the count of unlocked achievements
+   * @returns {number} Number of unlocked achievements
+   */
   const unlockedCount = computed(() => unlockedAchievements.value.size);
 
-  const init = () => {
+  /**
+   * Initialize the achievement store from localStorage
+   * @returns {void}
+   */
+  const init = (): void => {
     // Load unlocked achievements from localStorage
     const saved = localStorage.getItem("bmad-achievements");
     if (saved) {
@@ -121,25 +161,38 @@ export const useAchievementStore = defineStore("achievements", () => {
     }
   };
 
-  const save = () => {
+  /**
+   * Save unlocked achievements to localStorage
+   * @returns {void}
+   */
+  const save = (): void => {
     localStorage.setItem(
       "bmad-achievements",
       JSON.stringify([...unlockedAchievements.value])
     );
   };
 
-  const checkAchievements = async () => {
+  /**
+   * Check all achievements and unlock any that meet their conditions
+   * @returns {Promise<void>}
+   */
+  const checkAchievements = async (): Promise<void> => {
     for (const achievement of achievements) {
       if (unlockedAchievements.value.has(achievement.id)) continue;
 
-      const unlocked = await achievement.condition();
-      if (unlocked) {
+      const isUnlocked = await achievement.condition();
+      if (isUnlocked) {
         unlock(achievement);
       }
     }
   };
 
-  const unlock = (achievement: Achievement) => {
+  /**
+   * Unlock an achievement and show notification
+   * @param {Achievement} achievement - The achievement to unlock
+   * @returns {void}
+   */
+  const unlock = (achievement: Achievement): void => {
     if (unlockedAchievements.value.has(achievement.id)) return;
 
     unlockedAchievements.value.add(achievement.id);
@@ -149,13 +202,17 @@ export const useAchievementStore = defineStore("achievements", () => {
     recentUnlock.value = achievement;
     showNotification.value = true;
 
-    // Auto-hide after 3 seconds
+    // Auto-hide after duration
     setTimeout(() => {
       showNotification.value = false;
-    }, 3000);
+    }, NOTIFICATION_DURATION_MS);
   };
 
-  const dismissNotification = () => {
+  /**
+   * Dismiss the achievement notification
+   * @returns {void}
+   */
+  const dismissNotification = (): void => {
     showNotification.value = false;
   };
 

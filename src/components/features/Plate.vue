@@ -41,35 +41,67 @@ const sortedTasks = computed(() => {
   }
 });
 
-const formatDate = (ts: number) =>
-  new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+/**
+ * Format timestamp to HH:MM display format
+ * @param {number} timestamp - Unix timestamp in milliseconds
+ * @returns {string} Formatted time string
+ */
+const formatDate = (timestamp: number): string =>
+  new Date(timestamp).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-const openEstimator = (taskId: string) => {
+/**
+ * Open the caloric estimator modal for a task
+ * @param {string} taskId - The task ID to estimate
+ */
+const openEstimator = (taskId: string): void => {
   estimatingTaskId.value = taskId;
 };
 
-const closeEstimator = () => {
+/**
+ * Close the caloric estimator modal
+ */
+const closeEstimator = (): void => {
   estimatingTaskId.value = null;
 };
 
-const handleEstimate = async (points: number) => {
+/**
+ * Handle the estimation result and update the task
+ * @param {number} points - The estimated points
+ */
+const handleEstimate = async (points: number): Promise<void> => {
   if (estimatingTaskId.value) {
     await taskStore.estimateTask(estimatingTaskId.value, points);
     closeEstimator();
   }
 };
 
-const openChopper = (task: { id: string; title: string }) => {
+/**
+ * Open the chopper modal for a task
+ * @param {Object} task - The task to chop
+ * @param {string} task.id - Task ID
+ * @param {string} task.title - Task title
+ */
+const openChopper = (task: { id: string; title: string }): void => {
   choppingTaskId.value = task.id;
   choppingTaskTitle.value = task.title;
 };
 
-const closeChopper = () => {
+/**
+ * Close the chopper modal
+ */
+const closeChopper = (): void => {
   choppingTaskId.value = null;
   choppingTaskTitle.value = "";
 };
 
-const handleChop = async (newTitles: string[]) => {
+/**
+ * Handle the chop result and create new subtasks
+ * @param {string[]} newTitles - Array of new subtask titles
+ */
+const handleChop = async (newTitles: string[]): Promise<void> => {
   if (choppingTaskId.value) {
     await taskStore.chopTask(choppingTaskId.value, newTitles);
     closeChopper();
@@ -80,17 +112,29 @@ const handleChop = async (newTitles: string[]) => {
 const editingTaskId = ref<string | null>(null);
 const editingTitle = ref("");
 
-const startEdit = (task: { id: string; title: string }) => {
+/**
+ * Start editing a task's title
+ * @param {Object} task - The task to edit
+ * @param {string} task.id - Task ID
+ * @param {string} task.title - Current task title
+ */
+const startEdit = (task: { id: string; title: string }): void => {
   editingTaskId.value = task.id;
   editingTitle.value = task.title;
 };
 
-const cancelEdit = () => {
+/**
+ * Cancel the current edit operation
+ */
+const cancelEdit = (): void => {
   editingTaskId.value = null;
   editingTitle.value = "";
 };
 
-const saveEdit = async () => {
+/**
+ * Save the edited task title
+ */
+const saveEdit = async (): Promise<void> => {
   if (editingTaskId.value && editingTitle.value.trim()) {
     await taskStore.updateTaskTitle(editingTaskId.value, editingTitle.value);
     cancelEdit();
@@ -223,7 +267,7 @@ const saveEdit = async () => {
                 <h3
                   @dblclick="startEdit(task)"
                   class="text-base text-zinc-200 font-medium tracking-wide group-hover:text-white transition-colors cursor-text"
-                  title="雙擊編輯"
+                  :title="t('task.edit')"
                 >
                   {{ task.title }}
                 </h3>
@@ -260,7 +304,7 @@ const saveEdit = async () => {
                   taggingTaskId = taggingTaskId === task.id ? null : task.id
                 "
                 class="text-zinc-700 hover:text-amber-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
-                title="添加標籤"
+                :title="t('tag.add')"
               >
                 🏷️
               </button>
@@ -276,7 +320,7 @@ const saveEdit = async () => {
             <button
               @click="taskStore.deleteTask(task.id)"
               class="text-zinc-700 hover:text-red-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
-              title="刪除任務"
+              :title="t('task.delete')"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -300,7 +344,7 @@ const saveEdit = async () => {
               v-if="task.points > 3"
               @click="openChopper(task)"
               class="text-zinc-600 hover:text-red-500 transition-colors p-1"
-              title="切碎任務"
+              :title="t('task.chop')"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -326,7 +370,7 @@ const saveEdit = async () => {
               @click="openEstimator(task.id)"
               class="px-3 py-1 bg-zinc-950 border border-zinc-800 text-zinc-500 text-[10px] font-bold uppercase tracking-widest hover:border-zinc-600 hover:text-zinc-300 transition-all"
             >
-              稱重
+              {{ t("task.weigh") }}
             </button>
 
             <div

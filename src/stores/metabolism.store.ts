@@ -6,29 +6,51 @@ import type { SettingsDocType } from "@/modules/db/schemas/settings.schema";
 import { sensory } from "@/modules/sensory";
 import { useAnalyticsStore } from "./analytics.store";
 
+/** Default daily limit for metabolism/stress */
+const DEFAULT_DAILY_LIMIT = 100;
+
+/** Maximum percentage to display (prevents UI overflow) */
+const MAX_DISPLAY_PERCENTAGE = 999;
+
 export const useMetabolismStore = defineStore("metabolism", () => {
   const currentLoad = ref(0);
-  const dailyLimit = ref(100);
+  const dailyLimit = ref(DEFAULT_DAILY_LIMIT);
   const isInitialized = ref(false);
 
+  /**
+   * Calculate the load percentage based on current load and daily limit
+   * @returns {number} The percentage (0-999)
+   */
   const loadPercentage = computed(() => {
     if (dailyLimit.value <= 0) return 0;
     return Math.min(
       Math.round((currentLoad.value / dailyLimit.value) * 100),
-      999
+      MAX_DISPLAY_PERCENTAGE
     );
   });
 
+  /**
+   * Check if current load exceeds the daily limit
+   * @returns {boolean} True if overflowing
+   */
   const isOverflow = computed(() => loadPercentage.value > 100);
 
   const overrideActive = ref(false);
 
+  /**
+   * Check if the kitchen (task input) should be closed
+   * @returns {boolean} True if overflowing and not overridden
+   */
   const isKitchenClosed = computed(() => {
     // Closed if overflowing AND not overridden
     return isOverflow.value && !overrideActive.value;
   });
 
-  const init = async () => {
+  /**
+   * Initialize the metabolism store by subscribing to tasks and settings
+   * @returns {Promise<void>}
+   */
+  const init = async (): Promise<void> => {
     if (isInitialized.value) return;
 
     const db = await getDB();
@@ -40,9 +62,12 @@ export const useMetabolismStore = defineStore("metabolism", () => {
           status: "active",
         },
       })
-      .$.subscribe((tasks: TaskDocType[]) => {
+      .$.subscribe((activeTasks: TaskDocType[]) => {
         // Calculate total points
-        const total = tasks.reduce((sum, task) => sum + (task.points || 0), 0);
+        const total = activeTasks.reduce(
+          (sum, task) => sum + (task.points || 0),
+          0
+        );
 
         // Check for transition to overflow
         const wasOverflow =
@@ -78,15 +103,27 @@ export const useMetabolismStore = defineStore("metabolism", () => {
     isInitialized.value = true;
   };
 
-  const activateOverride = () => {
+  /**
+   * Activate the override to temporarily allow adding tasks when overloaded
+   * @returns {void}
+   */
+  const activateOverride = (): void => {
     overrideActive.value = true;
   };
 
-  const resetOverride = () => {
+  /**
+   * Reset the override state
+   * @returns {void}
+   */
+  const resetOverride = (): void => {
     overrideActive.value = false;
   };
 
-  const dailyReset = () => {
+  /**
+   * Reset daily load for a new day
+   * @returns {void}
+   */
+  const dailyReset = (): void => {
     currentLoad.value = 0; // Reset local state immediately
     overrideActive.value = false;
   };
