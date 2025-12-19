@@ -13,6 +13,7 @@ import {
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { RxDBUpdatePlugin } from "rxdb/plugins/update";
+import { RxDBMigrationSchemaPlugin } from "rxdb/plugins/migration-schema";
 import { taskSchema, type TaskDocType } from "./schemas/task.schema";
 import {
   settingsSchema,
@@ -23,8 +24,9 @@ import {
   type DailyLogDocType,
 } from "./schemas/daily-log.schema";
 
-// Enable dev mode for better error messages in development
+// Enable plugins
 addRxPlugin(RxDBUpdatePlugin);
+addRxPlugin(RxDBMigrationSchemaPlugin);
 if (import.meta.env.DEV) {
   addRxPlugin(RxDBDevModePlugin);
 }
