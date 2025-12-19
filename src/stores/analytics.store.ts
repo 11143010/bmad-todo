@@ -53,12 +53,27 @@ export const useAnalyticsStore = defineStore("analytics", () => {
   /**
    * Records completed points and increments task count.
    * Creates the log if it doesn't exist.
-   * @param {number} points - Points to add from completed task
+   * @param {Object} taskData - The task details
+   * @param {string} taskData.id - Task ID
+   * @param {string} taskData.title - Task title
+   * @param {number} taskData.points - Points to add
    * @returns {Promise<void>}
    */
-  const logAction = async (points: number): Promise<void> => {
+  const logAction = async (taskData: {
+    id: string;
+    title: string;
+    points: number;
+  }): Promise<void> => {
     const db = await getDB();
     const todayId = getTodayId();
+
+    const record = {
+      taskId: taskData.id,
+      title: taskData.title,
+      points: taskData.points,
+      completedAt: Date.now(),
+      type: "task" as const,
+    };
 
     try {
       const existingLog = await db.daily_logs.findOne(todayId).exec();
@@ -66,17 +81,21 @@ export const useAnalyticsStore = defineStore("analytics", () => {
       if (existingLog) {
         await existingLog.update({
           $inc: {
-            totalPoints: points,
+            totalPoints: taskData.points,
             tasksCompleted: 1,
+          },
+          $push: {
+            records: record,
           },
         });
       } else {
         await db.daily_logs.insert({
           id: todayId,
           date: Date.now(),
-          totalPoints: points,
+          totalPoints: taskData.points,
           tasksCompleted: INITIAL_TASKS_COMPLETED,
           overloadCount: INITIAL_OVERLOAD_COUNT,
+          records: [record],
         });
       }
     } catch (error) {
@@ -93,10 +112,21 @@ export const useAnalyticsStore = defineStore("analytics", () => {
     const todayId = getTodayId();
     const existingLog = await db.daily_logs.findOne(todayId).exec();
 
+    const record = {
+      taskId: "", // No specific task for overload
+      title: "System Overload",
+      points: 0,
+      completedAt: Date.now(),
+      type: "overload" as const,
+    };
+
     if (existingLog) {
       await existingLog.update({
         $inc: {
           overloadCount: 1,
+        },
+        $push: {
+          records: record,
         },
       });
     } else {
@@ -106,6 +136,7 @@ export const useAnalyticsStore = defineStore("analytics", () => {
         totalPoints: 0,
         tasksCompleted: 0,
         overloadCount: 1,
+        records: [record],
       });
     }
   };

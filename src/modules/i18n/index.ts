@@ -53,12 +53,13 @@ const translations = {
     "settings.shortcutHint": "按 ? 查看快捷鍵",
 
     // Analytics
-    "analytics.title": "壓力趨勢",
-    "analytics.subtitle": "過去七天",
+    "analytics.title": "代謝產出",
+    "analytics.subtitle": "每日壓力分析",
     "analytics.points": "點數",
     "analytics.tasks": "任務",
     "analytics.overloads": "超載",
     "analytics.noData": "尚無數據",
+    "analytics.details": "每日日誌詳情",
 
     // Shutdown
     "shutdown.button": "關機",
@@ -151,6 +152,7 @@ const translations = {
     "analytics.tasks": "Tasks",
     "analytics.overloads": "Overloads",
     "analytics.noData": "NO_DATA_AVAILABLE",
+    "analytics.details": "Daily Log Details",
 
     // Shutdown
     "shutdown.button": "SHUT_DOWN",

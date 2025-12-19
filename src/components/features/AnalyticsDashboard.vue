@@ -58,6 +58,30 @@ const getDayLabel = (dateStr: string) => {
   const localeStr = locale.value === "zh-TW" ? "zh-TW" : "en-US";
   return new Intl.DateTimeFormat(localeStr, { weekday: "short" }).format(date);
 };
+
+const selectedLog = ref<DailyLogDocType | null>(null);
+
+const selectLog = (log: DailyLogDocType) => {
+  selectedLog.value = log;
+};
+
+// Auto-select today on load
+watch(
+  currentLog,
+  (newLog) => {
+    if (newLog && !selectedLog.value) {
+      selectedLog.value = newLog;
+    }
+  },
+  { immediate: true }
+);
+
+const formatTime = (timestamp: number) => {
+  return new Date(timestamp).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 </script>
 
 <template>
@@ -89,7 +113,8 @@ const getDayLabel = (dateStr: string) => {
       <div
         v-for="log in weeklyLogs"
         :key="log.id"
-        class="flex flex-col items-center justify-end gap-2 group relative z-10"
+        @click="selectLog(log)"
+        class="flex flex-col items-center justify-end gap-2 group relative z-10 cursor-pointer"
         style="width: 40px"
       >
         <!-- Tooltip -->
@@ -122,9 +147,16 @@ const getDayLabel = (dateStr: string) => {
                 : '0 0 15px rgba(6, 182, 212, 0.3)',
           }"
         >
+          >
           <!-- Shine effect -->
           <div
             class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          ></div>
+
+          <!-- Selected Indicator -->
+          <div
+            v-if="selectedLog?.id === log.id"
+            class="absolute inset-0 border-2 border-white/50 rounded-lg"
           ></div>
         </div>
 
@@ -175,6 +207,68 @@ const getDayLabel = (dateStr: string) => {
         </div>
         <div class="text-[10px] text-zinc-500 uppercase">
           {{ t("analytics.overloads") }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Records View -->
+    <div v-if="selectedLog" class="border-t border-zinc-900 pt-6 space-y-4">
+      <h3
+        class="text-zinc-400 text-xs font-bold uppercase tracking-widest flex justify-between items-center"
+      >
+        <span
+          >{{ t("analytics.details") || "Details" }} //
+          {{ selectedLog.id }}</span
+        >
+        <span class="text-[10px] text-zinc-600 font-mono"
+          >{{ selectedLog.records?.length || 0 }} records</span
+        >
+      </h3>
+
+      <div class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+        <div
+          v-for="(record, index) in selectedLog.records"
+          :key="index"
+          class="flex items-center justify-between p-2 rounded-lg bg-zinc-900/30 border border-zinc-800/50 hover:border-zinc-700 transition-colors"
+        >
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-mono text-zinc-600">{{
+              formatTime(record.completedAt)
+            }}</span>
+            <div class="flex flex-col">
+              <span
+                class="text-sm"
+                :class="
+                  record.type === 'overload'
+                    ? 'text-red-400 font-bold'
+                    : 'text-zinc-200'
+                "
+              >
+                {{ record.title }}
+              </span>
+              <span
+                v-if="record.type === 'overload'"
+                class="text-[10px] text-red-500/60 uppercase tracking-wider"
+                >System Event</span
+              >
+            </div>
+          </div>
+
+          <div
+            v-if="record.type === 'task'"
+            class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800 text-xs text-zinc-400"
+          >
+            <span>{{ record.points }}</span>
+            <span class="text-[10px]">PTS</span>
+          </div>
+          <div v-else class="text-xl">⚠️</div>
+        </div>
+
+        <div
+          v-if="!selectedLog.records || selectedLog.records.length === 0"
+          class="text-center py-4 text-zinc-600 text-sm italic"
+        >
+          No detailed records available for this day.
         </div>
       </div>
     </div>

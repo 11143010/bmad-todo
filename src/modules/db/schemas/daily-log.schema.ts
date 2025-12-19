@@ -5,7 +5,7 @@ import {
 } from "rxdb";
 
 export const dailyLogSchemaLiteral = {
-  version: 0,
+  version: 1,
   primaryKey: "id", // YYYY-MM-DD
   type: "object",
   properties: {
@@ -30,6 +30,21 @@ export const dailyLogSchemaLiteral = {
       type: "number",
       default: 0,
       minimum: 0,
+    },
+    records: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          taskId: { type: "string" },
+          title: { type: "string" },
+          points: { type: "number" },
+          completedAt: { type: "number" },
+          type: { type: "string", enum: ["task", "overload"] },
+        },
+        required: ["taskId", "title", "points", "completedAt", "type"],
+      },
+      default: [],
     },
   },
   required: ["id", "date", "totalPoints", "tasksCompleted", "overloadCount"],

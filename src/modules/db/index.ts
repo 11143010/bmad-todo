@@ -96,6 +96,13 @@ const _create = async (): Promise<BMadDatabase> => {
     },
     daily_logs: {
       schema: dailyLogSchema,
+      migrationStrategies: {
+        // Migration from version 0 to 1: add records array
+        1: (oldDoc: Record<string, unknown>) => ({
+          ...oldDoc,
+          records: [],
+        }),
+      },
     },
   });
 

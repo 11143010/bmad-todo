@@ -120,7 +120,7 @@ export const useTaskStore = defineStore("tasks", () => {
     const task = await db.tasks.findOne(id).exec();
     if (task) {
       // Get necessary data before updating
-      const points = task.points;
+      // const points = task.points;
 
       await task.patch({ status: "completed" });
       sensory.play("complete");
@@ -130,7 +130,12 @@ export const useTaskStore = defineStore("tasks", () => {
       try {
         const analytics = useAnalyticsStore();
         await analytics.init();
-        await analytics.logAction(points);
+        // Log to analytics with task details
+        await analytics.logAction({
+          id: task.id,
+          title: task.title,
+          points: task.points,
+        });
 
         // Check achievements
         const { useAchievementStore } = await import(
