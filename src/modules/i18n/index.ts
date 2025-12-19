@@ -49,6 +49,7 @@ const translations = {
     "settings.preset.sprint": "衝刺",
     "settings.preset.extreme": "極限",
     "settings.language": "語言",
+    "settings.fontSize": "字體大小",
     "settings.shortcutHint": "按 ? 查看快捷鍵",
 
     // Analytics
@@ -140,6 +141,7 @@ const translations = {
     "settings.preset.sprint": "Sprint",
     "settings.preset.extreme": "Extreme",
     "settings.language": "Language",
+    "settings.fontSize": "Font Size",
     "settings.shortcutHint": "Press ? for shortcuts",
 
     // Analytics

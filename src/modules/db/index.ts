@@ -77,6 +77,13 @@ const _create = async (): Promise<BMadDatabase> => {
     },
     settings: {
       schema: settingsSchema,
+      migrationStrategies: {
+        // Migration from version 0 to 1: add fontSize field
+        1: (oldDoc: Record<string, unknown>) => ({
+          ...oldDoc,
+          fontSize: "medium",
+        }),
+      },
     },
     daily_logs: {
       schema: dailyLogSchema,

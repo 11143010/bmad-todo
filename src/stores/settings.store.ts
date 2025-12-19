@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { getDB } from "@/modules/db";
 import type { SettingsDocType } from "@/modules/db/schemas/settings.schema";
 
@@ -12,17 +12,40 @@ const DEFAULT_SOUND_ENABLED = true;
 /** Default haptics enabled state */
 const DEFAULT_HAPTICS_ENABLED = true;
 
+/** Default font size */
+const DEFAULT_FONT_SIZE = "medium";
+
+/** Font size options */
+export type FontSize = "small" | "medium" | "large";
+
+/** Font size CSS values */
+const FONT_SIZE_MAP: Record<FontSize, string> = {
+  small: "14px",
+  medium: "16px",
+  large: "18px",
+};
+
 /** Valid setting keys that can be updated */
-type SettingKey = "dailyLimit" | "soundEnabled" | "hapticsEnabled";
+type SettingKey = "dailyLimit" | "soundEnabled" | "hapticsEnabled" | "fontSize";
 
 /** Valid setting value types */
-type SettingValue = number | boolean;
+type SettingValue = number | boolean | FontSize;
 
 export const useSettingsStore = defineStore("settings", () => {
   const dailyLimit = ref(DEFAULT_DAILY_LIMIT);
   const soundEnabled = ref(DEFAULT_SOUND_ENABLED);
   const hapticsEnabled = ref(DEFAULT_HAPTICS_ENABLED);
+  const fontSize = ref<FontSize>(DEFAULT_FONT_SIZE);
   const isInitialized = ref(false);
+
+  // Apply font size to document
+  watch(
+    fontSize,
+    (newSize) => {
+      document.documentElement.style.fontSize = FONT_SIZE_MAP[newSize];
+    },
+    { immediate: true }
+  );
 
   /**
    * Initialize the store by syncing with RxDB
@@ -40,6 +63,7 @@ export const useSettingsStore = defineStore("settings", () => {
         dailyLimit.value = doc.dailyLimit;
         soundEnabled.value = doc.soundEnabled;
         hapticsEnabled.value = doc.hapticsEnabled;
+        fontSize.value = (doc.fontSize as FontSize) || DEFAULT_FONT_SIZE;
       }
     });
 
@@ -57,16 +81,13 @@ export const useSettingsStore = defineStore("settings", () => {
     value: SettingValue
   ): Promise<void> => {
     const db = await getDB();
-    // Optimistic update happens via local ref if we bound v-model to it,
-    // but here we ensure the DB is the source of truth.
-    // For distinct optimistic UI, we might update ref immediately,
-    // but RxDB subscription will loop back quickly.
 
     await db.settings.upsert({
       id: "user",
       dailyLimit: dailyLimit.value,
       soundEnabled: soundEnabled.value,
       hapticsEnabled: hapticsEnabled.value,
+      fontSize: fontSize.value,
       [key]: value,
     });
   };
@@ -96,13 +117,24 @@ export const useSettingsStore = defineStore("settings", () => {
     await updateSetting("hapticsEnabled", !hapticsEnabled.value);
   };
 
+  /**
+   * Set the font size
+   * @param {FontSize} size - The new font size
+   * @returns {Promise<void>}
+   */
+  const setFontSize = async (size: FontSize): Promise<void> => {
+    await updateSetting("fontSize", size);
+  };
+
   return {
     dailyLimit,
     soundEnabled,
     hapticsEnabled,
+    fontSize,
     init,
     setDailyLimit,
     toggleSound,
     toggleHaptics,
+    setFontSize,
   };
 });

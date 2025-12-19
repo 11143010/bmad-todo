@@ -5,7 +5,7 @@ import {
 } from "rxdb";
 
 export const settingsSchemaLiteral = {
-  version: 0,
+  version: 1,
   primaryKey: "id",
   type: "object",
   properties: {
@@ -24,6 +24,11 @@ export const settingsSchemaLiteral = {
     hapticsEnabled: {
       type: "boolean",
       default: true,
+    },
+    fontSize: {
+      type: "string",
+      enum: ["small", "medium", "large"],
+      default: "medium",
     },
   },
   required: ["id", "dailyLimit", "soundEnabled", "hapticsEnabled"],

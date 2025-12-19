@@ -201,6 +201,43 @@ const presets = computed(() => [
                 ></div>
               </button>
             </div>
+
+            <!-- Font Size -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">🔤</span>
+                <span class="text-sm">{{ t("settings.fontSize") }}</span>
+              </div>
+              <div class="flex gap-1">
+                <button
+                  @click="settings.setFontSize('small')"
+                  class="font-btn px-3 py-1 text-sm rounded transition-all"
+                  :class="
+                    settings.fontSize === 'small' ? 'font-btn-active' : ''
+                  "
+                >
+                  A
+                </button>
+                <button
+                  @click="settings.setFontSize('medium')"
+                  class="font-btn px-3 py-1 text-base rounded transition-all"
+                  :class="
+                    settings.fontSize === 'medium' ? 'font-btn-active' : ''
+                  "
+                >
+                  A
+                </button>
+                <button
+                  @click="settings.setFontSize('large')"
+                  class="font-btn px-3 py-1 text-lg rounded transition-all"
+                  :class="
+                    settings.fontSize === 'large' ? 'font-btn-active' : ''
+                  "
+                >
+                  A
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- Divider -->
@@ -354,9 +391,27 @@ const presets = computed(() => [
   color: var(--nebula-cyan);
 }
 
+/* Font Size Buttons */
+.font-btn {
+  border: 1px solid var(--glass-border);
+  color: var(--stardust);
+  background: transparent;
+}
+
+.font-btn:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.font-btn-active {
+  border-color: var(--nebula-purple);
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--nebula-purple);
+}
+
 /* Slider */
 input[type="range"] {
   -webkit-appearance: none;
+  appearance: none;
   background: var(--space-light);
   border-radius: 8px;
 }
