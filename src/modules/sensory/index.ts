@@ -1,23 +1,39 @@
+/**
+ * @module sensory
+ * @description Audio and haptic feedback module for BMad
+ */
+
 import { useSettingsStore } from "@/stores/settings.store";
 
-// Web Audio API Context
+/** Web Audio API Context singleton */
 let audioCtx: AudioContext | null = null;
 
-const getAudioContext = () => {
+/**
+ * Get or create the Web Audio context
+ * @returns {AudioContext | null} The audio context instance
+ */
+const getAudioContext = (): AudioContext | null => {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext)();
   }
   return audioCtx;
 };
 
-// Simple Synthesizer
+/**
+ * Play a synthesized tone
+ * @param {number} freq - Frequency in Hz
+ * @param {OscillatorType} type - Wave type (sine, square, sawtooth, triangle)
+ * @param {number} duration - Duration in seconds
+ * @param {number} startTime - Start delay in seconds
+ */
 const playTone = (
   freq: number,
   type: OscillatorType,
   duration: number,
   startTime = 0
-) => {
+): void => {
   const ctx = getAudioContext();
   if (!ctx) return;
   if (ctx.state === "suspended") ctx.resume();
@@ -41,8 +57,21 @@ const playTone = (
   osc.stop(ctx.currentTime + startTime + duration);
 };
 
+/** Sound effect types */
+type SoundEffect = "complete" | "add" | "warning";
+
+/** Vibration patterns */
+type VibrationPattern = "light" | "medium" | "heavy" | "pulse";
+
+/**
+ * Sensory feedback utilities for audio and haptics
+ */
 export const sensory = {
-  play: (effect: "complete" | "add" | "warning") => {
+  /**
+   * Play a sound effect
+   * @param {SoundEffect} effect - The effect to play
+   */
+  play: (effect: SoundEffect): void => {
     const settings = useSettingsStore();
     if (!settings.soundEnabled) return;
 
@@ -64,7 +93,11 @@ export const sensory = {
     }
   },
 
-  vibrate: (pattern: "light" | "medium" | "heavy" | "pulse") => {
+  /**
+   * Trigger haptic feedback
+   * @param {VibrationPattern} pattern - The vibration pattern
+   */
+  vibrate: (pattern: VibrationPattern): void => {
     const settings = useSettingsStore();
     if (!settings.hapticsEnabled) return;
 

@@ -1,3 +1,8 @@
+/**
+ * @module db
+ * @description RxDB database initialization and management for BMad
+ */
+
 import {
   createRxDatabase,
   addRxPlugin,
@@ -30,14 +35,23 @@ export type BMadDatabaseCollections = {
   daily_logs: RxCollection<DailyLogDocType>;
 };
 
+/** Database type with all collections */
 export type BMadDatabase = RxDatabase<BMadDatabaseCollections>;
 
+/** Singleton database promise */
 let dbPromise: Promise<BMadDatabase> | null = null;
 
+/** Default daily stress limit */
+const DEFAULT_DAILY_LIMIT = 100;
+
+/**
+ * Create a new database instance (internal)
+ * @returns {Promise<BMadDatabase>} The database instance
+ */
 const _create = async (): Promise<BMadDatabase> => {
   console.log("DatabaseService: creating database..");
 
-  let storage: RxStorage<any, any> = getRxStorageDexie();
+  let storage: RxStorage<unknown, unknown> = getRxStorageDexie();
 
   if (import.meta.env.DEV) {
     const { wrappedValidateAjvStorage } = await import(
@@ -78,7 +92,7 @@ const _create = async (): Promise<BMadDatabase> => {
   if (!userSettings) {
     await settingsCollection.insert({
       id: "user",
-      dailyLimit: 100,
+      dailyLimit: DEFAULT_DAILY_LIMIT,
       soundEnabled: true,
       hapticsEnabled: true,
     });
@@ -89,14 +103,23 @@ const _create = async (): Promise<BMadDatabase> => {
   return db;
 };
 
-export const initDB = () => {
+/**
+ * Initialize the database singleton
+ * @returns {Promise<BMadDatabase>} The database instance
+ */
+export const initDB = (): Promise<BMadDatabase> => {
   if (!dbPromise) {
     dbPromise = _create();
   }
   return dbPromise;
 };
 
-export const getDB = () => {
+/**
+ * Get the initialized database instance
+ * @returns {Promise<BMadDatabase>} The database instance
+ * @throws {Error} If database is not initialized
+ */
+export const getDB = (): Promise<BMadDatabase> => {
   if (!dbPromise) {
     throw new Error("Database not initialized. Call initDB() first.");
   }
