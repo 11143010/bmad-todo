@@ -20,7 +20,7 @@ const toggle = () => {
   <button
     v-if="!isOpen"
     @click="toggle"
-    class="fixed top-4 right-[4.5rem] z-50 p-3 bg-zinc-900/80 backdrop-blur border border-zinc-700 rounded-full shadow-xl hover:bg-zinc-800 transition-all group hover:scale-105"
+    class="trophy-btn fixed top-4 right-[4.5rem] z-50 p-3 rounded-full shadow-xl transition-all group hover:scale-105"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,14 @@ const toggle = () => {
     </svg>
     <span
       v-if="unlockedCount > 0"
-      class="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-black text-xs font-bold rounded-full flex items-center justify-center"
+      class="absolute -top-1 -right-1 w-5 h-5 text-black text-xs font-bold rounded-full flex items-center justify-center"
+      style="
+        background: linear-gradient(
+          135deg,
+          var(--nebula-cyan),
+          var(--nebula-purple)
+        );
+      "
     >
       {{ unlockedCount }}
     </span>

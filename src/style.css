@@ -319,3 +319,25 @@ body {
     var(--nebula-blue) 100%
   );
 }
+
+/* ============================================
+   Top Right Buttons (Galaxy Theme)
+   ============================================ */
+
+.shutdown-btn,
+.trophy-btn {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.shutdown-btn:hover {
+  border-color: rgba(236, 72, 153, 0.5);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+.trophy-btn:hover {
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+}

@@ -34,7 +34,7 @@ const confirmShutdown = async () => {
   <button
     v-if="!showModal"
     @click="openShutdown"
-    class="fixed top-4 right-[8rem] z-50 p-3 bg-zinc-900/80 backdrop-blur border border-zinc-700 rounded-full shadow-xl hover:bg-zinc-800 hover:border-red-500 transition-all group hover:scale-105"
+    class="shutdown-btn fixed top-4 right-[8rem] z-50 p-3 rounded-full shadow-xl transition-all group hover:scale-105"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +46,7 @@ const confirmShutdown = async () => {
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
-      class="text-zinc-400 group-hover:text-red-500 transition-colors"
+      class="text-zinc-400 group-hover:text-pink-400 transition-colors"
     >
       <path d="M12 2v10" />
       <path d="M18.4 6.6a9 9 0 1 1-12.77.04" />

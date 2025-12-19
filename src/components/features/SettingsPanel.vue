@@ -46,8 +46,8 @@ const presets = computed(() => [
     <!-- Toggle Button -->
     <button
       @click="toggle"
-      class="fixed top-4 right-4 z-50 p-3 bg-zinc-900/80 backdrop-blur border border-zinc-700 rounded-full shadow-xl hover:bg-zinc-800 transition-all group hover:scale-105"
-      :class="{ 'bg-green-500/20 border-green-500': isOpen }"
+      class="fixed top-4 right-4 z-50 p-3 rounded-full shadow-xl transition-all group hover:scale-105 top-btn"
+      :class="isOpen ? 'top-btn-active' : ''"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -59,8 +59,12 @@ const presets = computed(() => [
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        class="text-zinc-400 group-hover:text-white transition-colors"
-        :class="{ 'text-green-400 animate-spin-slow': isOpen }"
+        class="transition-colors"
+        :class="
+          isOpen
+            ? 'text-cyan-400 animate-spin-slow'
+            : 'text-zinc-400 group-hover:text-white'
+        "
       >
         <path
           d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
@@ -250,5 +254,24 @@ const presets = computed(() => [
 }
 .animate-spin-slow {
   animation: spin-slow 3s linear infinite;
+}
+
+/* Galaxy Theme Button */
+.top-btn {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.top-btn:hover {
+  background: var(--glass-hover);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+}
+
+.top-btn-active {
+  border-color: var(--nebula-cyan);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
 }
 </style>
