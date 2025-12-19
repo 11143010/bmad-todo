@@ -6,13 +6,13 @@ import type { SettingsDocType } from "@/modules/db/schemas/settings.schema";
 import { sensory } from "@/modules/sensory";
 import { useAnalyticsStore } from "./analytics.store";
 
-/** Default daily limit for metabolism/stress */
+/** Default daily limit for stress */
 const DEFAULT_DAILY_LIMIT = 100;
 
 /** Maximum percentage to display (prevents UI overflow) */
 const MAX_DISPLAY_PERCENTAGE = 999;
 
-export const useMetabolismStore = defineStore("metabolism", () => {
+export const useStressStore = defineStore("stress", () => {
   const currentLoad = ref(0);
   const dailyLimit = ref(DEFAULT_DAILY_LIMIT);
   const isInitialized = ref(false);

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useTaskStore } from "@/stores/task.store";
-import { useMetabolismStore } from "@/stores/metabolism.store";
+import { useStressStore } from "@/stores/stress.store";
 import { useAnalyticsStore } from "@/stores/analytics.store";
 import { sensory } from "@/modules/sensory";
 import { useI18n } from "@/modules/i18n";
 
 const { t } = useI18n();
 const taskStore = useTaskStore();
-const metabolism = useMetabolismStore();
+const stress = useStressStore();
 const analytics = useAnalyticsStore();
 
 const showModal = ref(false);
@@ -24,7 +24,7 @@ const cancel = () => {
 const confirmShutdown = async () => {
   sensory.play("complete");
   await taskStore.archiveCompleted();
-  metabolism.dailyReset();
+  stress.dailyReset();
   showModal.value = false;
 };
 </script>

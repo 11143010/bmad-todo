@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useMetabolismStore } from "@/stores/metabolism.store";
+import { useStressStore } from "@/stores/stress.store";
 import { useI18n } from "@/modules/i18n";
 
 const { t } = useI18n();
-const metabolism = useMetabolismStore();
+const stress = useStressStore();
 
 /**
  * Planet evolution stage based on stress level
@@ -15,10 +15,10 @@ const metabolism = useMetabolismStore();
  * >100%: Explosion!
  */
 const planetStage = computed(() => {
-  if (metabolism.isOverflow) return "exploding";
-  if (metabolism.loadPercentage >= 90) return "critical";
-  if (metabolism.loadPercentage >= 70) return "industrial";
-  if (metabolism.loadPercentage >= 40) return "developing";
+  if (stress.isOverflow) return "exploding";
+  if (stress.loadPercentage >= 90) return "critical";
+  if (stress.loadPercentage >= 70) return "industrial";
+  if (stress.loadPercentage >= 40) return "developing";
   return "peaceful";
 });
 
@@ -85,15 +85,15 @@ const animationClass = computed(() => {
  * City lights opacity (increases with development)
  */
 const cityLightsOpacity = computed(() => {
-  if (metabolism.loadPercentage < 40) return 0;
-  if (metabolism.loadPercentage < 70) return 0.3;
-  if (metabolism.loadPercentage < 90) return 0.6;
+  if (stress.loadPercentage < 40) return 0;
+  if (stress.loadPercentage < 70) return 0.3;
+  if (stress.loadPercentage < 90) return 0.6;
   return 0.9;
 });
 
 const statusText = computed(() => {
-  if (metabolism.isOverflow) return t("gauge.overload");
-  if (metabolism.loadPercentage >= 80) return t("gauge.heavy");
+  if (stress.isOverflow) return t("gauge.overload");
+  if (stress.loadPercentage >= 80) return t("gauge.heavy");
   return t("gauge.normal");
 });
 </script>
@@ -273,7 +273,7 @@ const statusText = computed(() => {
               class="text-4xl font-black tabular-nums text-white"
               :class="{ 'animate-pulse': planetStage === 'exploding' }"
             >
-              {{ metabolism.loadPercentage }}
+              {{ stress.loadPercentage }}
             </span>
             <span class="text-sm font-bold text-white/70">%</span>
           </div>
@@ -290,9 +290,9 @@ const statusText = computed(() => {
         {{ statusText }}
       </h3>
       <p class="text-sm text-zinc-400 font-mono">
-        <span class="text-zinc-300">{{ metabolism.currentLoad }}</span>
+        <span class="text-zinc-300">{{ stress.currentLoad }}</span>
         <span class="text-zinc-600"> / </span>
-        <span>{{ metabolism.dailyLimit }}</span>
+        <span>{{ stress.dailyLimit }}</span>
         <span class="text-zinc-500 ml-1">{{ t("gauge.points") }}</span>
       </p>
     </div>

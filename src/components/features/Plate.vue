@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useTaskStore } from "@/stores/task.store";
 import { useTagStore } from "@/stores/tag.store";
-import CaloricEstimator from "@/components/features/CaloricEstimator.vue";
+import StressEstimator from "@/components/features/StressEstimator.vue";
 import ChopperModal from "@/components/features/ChopperModal.vue";
 import TagSelector from "@/components/features/TagSelector.vue";
 import StardustBurst from "@/components/features/StardustBurst.vue";
@@ -459,7 +459,7 @@ const saveEdit = async (): Promise<void> => {
 
     <!-- Estimator Modal -->
     <Teleport to="body">
-      <CaloricEstimator
+      <StressEstimator
         v-if="estimatingTaskId"
         @select="handleEstimate"
         @close="closeEstimator"

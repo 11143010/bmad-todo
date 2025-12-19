@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useSettingsStore } from "@/stores/settings.store";
-import { useMetabolismStore } from "@/stores/metabolism.store";
+import { useStressStore } from "@/stores/stress.store";
 import { useTaskStore } from "@/stores/task.store";
 import { useAchievementStore } from "@/stores/achievement.store";
 import { useTagStore } from "@/stores/tag.store";
@@ -18,14 +18,14 @@ import PWAStatus from "@/components/features/PWAStatus.vue";
 import KeyboardShortcuts from "@/components/features/KeyboardShortcuts.vue";
 
 const settings = useSettingsStore();
-const metabolism = useMetabolismStore();
+const stress = useStressStore();
 const taskStore = useTaskStore();
 const achievementStore = useAchievementStore();
 const tagStore = useTagStore();
 
 onMounted(() => {
   settings.init();
-  metabolism.init();
+  stress.init();
   taskStore.init();
   achievementStore.init();
   tagStore.init();
@@ -98,7 +98,7 @@ onMounted(() => {
       leave-active-class="transition-opacity duration-200 ease-in"
       leave-to-class="opacity-0"
     >
-      <SystemOverload v-if="metabolism.isSystemOverloaded" />
+      <SystemOverload v-if="stress.isSystemOverloaded" />
     </Transition>
   </div>
 </template>

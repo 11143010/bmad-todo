@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useTaskStore } from "@/stores/task.store";
-import { useMetabolismStore } from "@/stores/metabolism.store";
+import { useStressStore } from "@/stores/stress.store";
 import { useI18n } from "@/modules/i18n";
 
 const { t } = useI18n();
 const taskStore = useTaskStore();
-const metabolism = useMetabolismStore();
+const stress = useStressStore();
 const newTaskTitle = ref("");
 const isFocused = ref(false);
 
@@ -15,7 +15,7 @@ const isFocused = ref(false);
  */
 const handleSubmit = async (): Promise<void> => {
   if (!newTaskTitle.value.trim()) return;
-  if (metabolism.isSystemOverloaded) return;
+  if (stress.isSystemOverloaded) return;
 
   await taskStore.addTask(newTaskTitle.value);
   newTaskTitle.value = "";
@@ -51,7 +51,7 @@ const handleSubmit = async (): Promise<void> => {
             );
             backdrop-filter: blur(12px);
           "
-          :disabled="metabolism.isSystemOverloaded"
+          :disabled="stress.isSystemOverloaded"
         />
 
         <!-- Enter Key Hint -->
@@ -84,7 +84,7 @@ const handleSubmit = async (): Promise<void> => {
 
     <!-- Kitchen Closed Feedback -->
     <p
-      v-if="metabolism.isSystemOverloaded"
+      v-if="stress.isSystemOverloaded"
       class="absolute -bottom-6 left-0 text-xs font-bold animate-pulse"
       style="color: var(--nebula-pink)"
     >

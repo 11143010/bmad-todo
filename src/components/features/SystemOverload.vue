@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useMetabolismStore } from "@/stores/metabolism.store";
+import { useStressStore } from "@/stores/stress.store";
 import { useI18n } from "@/modules/i18n";
 
 const { t } = useI18n();
-const metabolism = useMetabolismStore();
+const stress = useStressStore();
 const holdProgress = ref(0);
 const isMinimized = ref(false);
 let holdInterval: number | null = null;
@@ -38,7 +38,7 @@ const stopHold = (): void => {
  */
 const completeOverride = (): void => {
   stopHold();
-  metabolism.activateOverride();
+  stress.activateOverride();
 };
 
 /**
