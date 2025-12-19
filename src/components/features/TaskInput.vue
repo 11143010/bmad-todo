@@ -15,7 +15,7 @@ const isFocused = ref(false);
  */
 const handleSubmit = async (): Promise<void> => {
   if (!newTaskTitle.value.trim()) return;
-  if (metabolism.isKitchenClosed) return;
+  if (metabolism.isSystemOverloaded) return;
 
   await taskStore.addTask(newTaskTitle.value);
   newTaskTitle.value = "";
@@ -51,7 +51,7 @@ const handleSubmit = async (): Promise<void> => {
             );
             backdrop-filter: blur(12px);
           "
-          :disabled="metabolism.isKitchenClosed"
+          :disabled="metabolism.isSystemOverloaded"
         />
 
         <!-- Enter Key Hint -->
@@ -84,7 +84,7 @@ const handleSubmit = async (): Promise<void> => {
 
     <!-- Kitchen Closed Feedback -->
     <p
-      v-if="metabolism.isKitchenClosed"
+      v-if="metabolism.isSystemOverloaded"
       class="absolute -bottom-6 left-0 text-xs font-bold animate-pulse"
       style="color: var(--nebula-pink)"
     >

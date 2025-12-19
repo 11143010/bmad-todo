@@ -1,0 +1,520 @@
+<testsuites id="" name="" tests="12" failures="12" skipped="0" errors="0" time="18.353689">
+<testsuite name="core-flows.spec.ts" timestamp="2025-12-19T02:02:22.778Z" hostname="chromium" tests="4" failures="4" skipped="0" time="10.432" errors="0">
+<testcase name="BMad Core Flows › should display stomach gauge on load" classname="core-flows.spec.ts" time="2.553">
+<failure message="core-flows.spec.ts:8:3 should display stomach gauge on load" type="FAILURE">
+<![CDATA[  [chromium] › core-flows.spec.ts:8:3 › BMad Core Flows › should display stomach gauge on load ─────
+
+    Error: page.evaluate: SecurityError: Failed to execute 'databases' on 'IDBFactory': Access to the IndexedDB API is denied in this context.
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-chromium/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-chromium/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should add a task to the plate" classname="core-flows.spec.ts" time="2.688">
+<failure message="core-flows.spec.ts:13:3 should add a task to the plate" type="FAILURE">
+<![CDATA[  [chromium] › core-flows.spec.ts:13:3 › BMad Core Flows › should add a task to the plate ──────────
+
+    Error: page.evaluate: SecurityError: Failed to execute 'databases' on 'IDBFactory': Access to the IndexedDB API is denied in this context.
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-chromium/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-chromium/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should show Kitchen Closed when over limit" classname="core-flows.spec.ts" time="2.678">
+<failure message="core-flows.spec.ts:20:3 should show Kitchen Closed when over limit" type="FAILURE">
+<![CDATA[  [chromium] › core-flows.spec.ts:20:3 › BMad Core Flows › should show Kitchen Closed when over limit 
+
+    Error: page.evaluate: SecurityError: Failed to execute 'databases' on 'IDBFactory': Access to the IndexedDB API is denied in this context.
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-chromium/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-chromium/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should complete task with swipe gesture" classname="core-flows.spec.ts" time="2.513">
+<failure message="core-flows.spec.ts:34:3 should complete task with swipe gesture" type="FAILURE">
+<![CDATA[  [chromium] › core-flows.spec.ts:34:3 › BMad Core Flows › should complete task with swipe gesture ─
+
+    Error: page.evaluate: SecurityError: Failed to execute 'databases' on 'IDBFactory': Access to the IndexedDB API is denied in this context.
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:290:30), <anonymous>:2:41)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-chromium/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-chromium/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="core-flows.spec.ts" timestamp="2025-12-19T02:02:22.778Z" hostname="webkit" tests="4" failures="4" skipped="0" time="6.885" errors="0">
+<testcase name="BMad Core Flows › should display stomach gauge on load" classname="core-flows.spec.ts" time="1.671">
+<failure message="core-flows.spec.ts:8:3 should display stomach gauge on load" type="FAILURE">
+<![CDATA[  [webkit] › core-flows.spec.ts:8:3 › BMad Core Flows › should display stomach gauge on load ───────
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-webkit/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-webkit/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should add a task to the plate" classname="core-flows.spec.ts" time="1.748">
+<failure message="core-flows.spec.ts:13:3 should add a task to the plate" type="FAILURE">
+<![CDATA[  [webkit] › core-flows.spec.ts:13:3 › BMad Core Flows › should add a task to the plate ────────────
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-webkit/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-webkit/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should show Kitchen Closed when over limit" classname="core-flows.spec.ts" time="1.763">
+<failure message="core-flows.spec.ts:20:3 should show Kitchen Closed when over limit" type="FAILURE">
+<![CDATA[  [webkit] › core-flows.spec.ts:20:3 › BMad Core Flows › should show Kitchen Closed when over limit 
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-webkit/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-webkit/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should complete task with swipe gesture" classname="core-flows.spec.ts" time="1.703">
+<failure message="core-flows.spec.ts:34:3 should complete task with swipe gesture" type="FAILURE">
+<![CDATA[  [webkit] › core-flows.spec.ts:34:3 › BMad Core Flows › should complete task with swipe gesture ───
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-webkit/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-webkit/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="core-flows.spec.ts" timestamp="2025-12-19T02:02:22.778Z" hostname="mobile-safari" tests="4" failures="4" skipped="0" time="3.606" errors="0">
+<testcase name="BMad Core Flows › should display stomach gauge on load" classname="core-flows.spec.ts" time="0.886">
+<failure message="core-flows.spec.ts:8:3 should display stomach gauge on load" type="FAILURE">
+<![CDATA[  [mobile-safari] › core-flows.spec.ts:8:3 › BMad Core Flows › should display stomach gauge on load 
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-mobile-safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-mobile-safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-mobile-safari/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-mobile-safari/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-mobile-safari/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-mobile-safari/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-c74fb-splay-stomach-gauge-on-load-mobile-safari/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should add a task to the plate" classname="core-flows.spec.ts" time="0.928">
+<failure message="core-flows.spec.ts:13:3 should add a task to the plate" type="FAILURE">
+<![CDATA[  [mobile-safari] › core-flows.spec.ts:13:3 › BMad Core Flows › should add a task to the plate ─────
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-mobile-safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-mobile-safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-mobile-safari/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-mobile-safari/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-mobile-safari/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-mobile-safari/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-should-add-a-task-to-the-plate-mobile-safari/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should show Kitchen Closed when over limit" classname="core-flows.spec.ts" time="0.904">
+<failure message="core-flows.spec.ts:20:3 should show Kitchen Closed when over limit" type="FAILURE">
+<![CDATA[  [mobile-safari] › core-flows.spec.ts:20:3 › BMad Core Flows › should show Kitchen Closed when over limit 
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-mobile-safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-mobile-safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-mobile-safari/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-mobile-safari/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-mobile-safari/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-mobile-safari/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-6a327-chen-Closed-when-over-limit-mobile-safari/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="BMad Core Flows › should complete task with swipe gesture" classname="core-flows.spec.ts" time="0.888">
+<failure message="core-flows.spec.ts:34:3 should complete task with swipe gesture" type="FAILURE">
+<![CDATA[  [mobile-safari] › core-flows.spec.ts:34:3 › BMad Core Flows › should complete task with swipe gesture 
+
+    Error: page.evaluate: SecurityError: The operation is insecure.
+
+       at ../support/fixtures/index.ts:27
+
+      25 |     async ({ page }, use) => {
+      26 |       // Clear IndexedDB
+    > 27 |       await page.evaluate(async () => {
+         |                  ^
+      28 |         const databases = await indexedDB.databases();
+      29 |         for (const db of databases) {
+      30 |           if (db.name) {
+        at Object.base.extend.cleanDatabase.auto (/Users/ray.pong/Developer/BMad/bmad-app/tests/support/fixtures/index.ts:27:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-mobile-safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-mobile-safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-mobile-safari/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-mobile-safari/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-mobile-safari/test-failed-1.png]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-mobile-safari/video.webm]]
+
+[[ATTACHMENT|core-flows-BMad-Core-Flows-55c94-ete-task-with-swipe-gesture-mobile-safari/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

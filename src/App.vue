@@ -7,7 +7,7 @@ import { useAchievementStore } from "@/stores/achievement.store";
 import { useTagStore } from "@/stores/tag.store";
 import SettingsPanel from "@/components/features/SettingsPanel.vue";
 import StomachGauge from "@/components/features/StomachGauge.vue";
-import KitchenClosed from "@/components/features/KitchenClosed.vue";
+import SystemOverload from "@/components/features/SystemOverload.vue";
 import TaskInput from "@/components/features/TaskInput.vue";
 import Plate from "@/components/features/Plate.vue";
 import AnalyticsDashboard from "@/components/features/AnalyticsDashboard.vue";
@@ -98,7 +98,7 @@ onMounted(() => {
       leave-active-class="transition-opacity duration-200 ease-in"
       leave-to-class="opacity-0"
     >
-      <KitchenClosed v-if="metabolism.isKitchenClosed" />
+      <SystemOverload v-if="metabolism.isSystemOverloaded" />
     </Transition>
   </div>
 </template>

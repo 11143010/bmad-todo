@@ -38,11 +38,11 @@ export const useMetabolismStore = defineStore("metabolism", () => {
   const overrideActive = ref(false);
 
   /**
-   * Check if the kitchen (task input) should be closed
+   * Check if the system is in overloaded state (task input should be blocked)
    * @returns {boolean} True if overflowing and not overridden
    */
-  const isKitchenClosed = computed(() => {
-    // Closed if overflowing AND not overridden
+  const isSystemOverloaded = computed(() => {
+    // Overloaded if overflowing AND not overridden
     return isOverflow.value && !overrideActive.value;
   });
 
@@ -133,7 +133,7 @@ export const useMetabolismStore = defineStore("metabolism", () => {
     dailyLimit,
     loadPercentage,
     isOverflow,
-    isKitchenClosed,
+    isSystemOverloaded,
     overrideActive,
     init,
     activateOverride,
