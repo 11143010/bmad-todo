@@ -50,8 +50,8 @@ const _create = async (): Promise<BMadDatabase> => {
   const db = await createRxDatabase<BMadDatabaseCollections>({
     name: "bmaddb",
     storage,
-    ignoreDuplicate: true, // Helpful for HMR
-    multiInstance: false, // Disable multi-instance to avoid conflicts
+    ignoreDuplicate: import.meta.env.DEV, // Only in dev mode
+    multiInstance: false,
   });
 
   console.log("DatabaseService: created database");
