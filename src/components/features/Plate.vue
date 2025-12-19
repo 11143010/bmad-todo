@@ -499,10 +499,25 @@ const saveEdit = async (): Promise<void> => {
                   @click="
                     taggingTaskId = taggingTaskId === task.id ? null : task.id
                   "
-                  class="text-zinc-700 hover:text-amber-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
+                  class="w-8 h-8 rounded-full bg-zinc-900/30 hover:bg-zinc-800 text-zinc-500 hover:text-amber-400 transition-all flex items-center justify-center backdrop-blur-sm border border-transparent hover:border-amber-500/30"
                   :title="t('tag.add')"
                 >
-                  🏷️
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"
+                    />
+                    <path d="M7 7h.01" />
+                  </svg>
                 </button>
                 <!-- Tag Selector Dropdown -->
                 <TagSelector
@@ -515,7 +530,7 @@ const saveEdit = async (): Promise<void> => {
               <!-- DELETE BUTTON -->
               <button
                 @click="taskStore.deleteTask(task.id)"
-                class="text-zinc-700 hover:text-red-400 transition-colors p-1 opacity-0 group-hover:opacity-100"
+                class="w-8 h-8 rounded-full bg-zinc-900/30 hover:bg-red-900/20 text-zinc-500 hover:text-red-400 transition-all flex items-center justify-center backdrop-blur-sm border border-transparent hover:border-red-500/30"
                 :title="t('task.delete')"
               >
                 <svg
@@ -561,11 +576,13 @@ const saveEdit = async (): Promise<void> => {
               </button>
 
               <!-- WEIGH / POINTS -->
+              <!-- WEIGH / POINTS -->
               <button
                 v-if="task.points === 0"
                 @click="openEstimator(task.id)"
-                class="px-3 py-1 bg-zinc-950 border border-zinc-800 text-zinc-500 text-sm font-bold uppercase tracking-widest hover:border-zinc-600 hover:text-zinc-300 transition-all"
+                class="px-4 py-1.5 rounded-full bg-zinc-900/50 border border-zinc-700 hover:border-cyan-500/50 text-cyan-200/80 hover:text-cyan-100 text-xs font-bold uppercase tracking-widest transition-all hover:bg-cyan-900/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.15)] flex items-center gap-2 group/weigh"
               >
+                <span class="group-hover/weigh:animate-pulse">⚖️</span>
                 {{ t("task.weigh") }}
               </button>
 
