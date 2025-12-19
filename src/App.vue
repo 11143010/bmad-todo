@@ -33,11 +33,19 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- Galaxy Background Layers -->
+  <div class="galaxy-bg"></div>
+  <div class="nebula-glow top-right"></div>
+  <div class="nebula-glow bottom-left"></div>
+
   <div
-    class="min-h-screen bg-zinc-950 text-zinc-100 p-8 flex flex-col items-center"
+    class="min-h-screen bg-zinc-950 text-zinc-100 p-8 flex flex-col items-center relative z-10"
   >
     <h1 class="text-4xl font-black mb-8 tracking-tighter w-full max-w-4xl">
-      BMad <span class="text-green-500 text-sm align-top">ALPHA</span>
+      <span class="gradient-text">BMad</span>
+      <span class="text-green-500 text-sm align-top ml-2 animate-pulse"
+        >ALPHA</span
+      >
     </h1>
 
     <div

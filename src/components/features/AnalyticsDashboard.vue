@@ -61,14 +61,14 @@ const getDayLabel = (dateStr: string) => {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="analytics-card space-y-6 p-4 rounded-xl">
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="space-y-1">
-        <h2 class="text-zinc-400 text-xs font-bold uppercase tracking-widest">
+        <h2 class="text-zinc-300 text-xs font-bold uppercase tracking-widest">
           {{ t("analytics.title") }}
         </h2>
-        <div class="text-[10px] text-zinc-600 font-mono">
+        <div class="text-[10px] text-zinc-500 font-mono">
           {{ t("analytics.subtitle") }}
         </div>
       </div>
@@ -114,8 +114,12 @@ const getDayLabel = (dateStr: string) => {
             height: getBarHeight(log.totalPoints),
             background:
               log.overloadCount > 0
-                ? 'linear-gradient(to top, #ef4444, #f97316)'
-                : 'linear-gradient(to top, #22c55e, #4ade80)',
+                ? 'linear-gradient(to top, var(--nebula-pink), var(--nebula-violet))'
+                : 'linear-gradient(to top, var(--nebula-cyan), var(--nebula-purple))',
+            boxShadow:
+              log.overloadCount > 0
+                ? '0 0 15px rgba(236, 72, 153, 0.4)'
+                : '0 0 15px rgba(6, 182, 212, 0.3)',
           }"
         >
           <!-- Shine effect -->
@@ -176,3 +180,12 @@ const getDayLabel = (dateStr: string) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.analytics-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+</style>

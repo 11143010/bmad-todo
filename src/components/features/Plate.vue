@@ -148,15 +148,30 @@ const saveEdit = async (): Promise<void> => {
     <div class="flex items-center justify-between mb-6 px-1">
       <div class="flex items-center space-x-2 text-zinc-500">
         <div
-          class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"
+          class="w-2 h-2 rounded-full animate-pulse"
+          style="
+            background: var(--nebula-cyan);
+            box-shadow: 0 0 10px var(--nebula-cyan);
+          "
         ></div>
         <h2 class="text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
           {{ t("plate.title") }} // 0{{ taskStore.tasks.length }}
         </h2>
       </div>
-      <div class="h-px bg-zinc-800 flex-1 ml-4 relative overflow-hidden">
+      <div
+        class="h-px flex-1 ml-4 relative overflow-hidden"
+        style="background: var(--glass-border)"
+      >
         <div
-          class="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-600 to-transparent w-1/2 animate-[shimmer_2s_infinite]"
+          class="absolute inset-0 w-1/2 animate-[shimmer_2s_infinite]"
+          style="
+            background: linear-gradient(
+              to right,
+              transparent,
+              var(--nebula-purple),
+              transparent
+            );
+          "
         ></div>
       </div>
       <!-- Sort Buttons -->
@@ -197,17 +212,25 @@ const saveEdit = async (): Promise<void> => {
       </div>
     </div>
 
-    <!-- Empty State with character -->
+    <!-- Empty State with cosmic theme -->
     <div
       v-if="taskStore.tasks.length === 0"
-      class="flex flex-col items-center justify-center py-20 text-zinc-600 space-y-4 border-2 border-dashed border-zinc-900 rounded-3xl bg-zinc-900/20"
+      class="flex flex-col items-center justify-center py-20 space-y-4 rounded-3xl"
+      style="
+        background: var(--glass-bg);
+        border: 1px dashed var(--glass-border);
+        backdrop-filter: blur(8px);
+      "
     >
       <div
-        class="text-4xl filter grayscale opacity-20 hover:opacity-100 hover:grayscale-0 transition-all duration-700 cursor-help"
+        class="text-5xl opacity-30 hover:opacity-100 transition-all duration-700 cursor-help"
+        style="filter: drop-shadow(0 0 20px var(--nebula-purple))"
       >
-        🍽️
+        🌌
       </div>
-      <p class="font-mono text-sm tracking-widest uppercase opacity-50">
+      <p
+        class="font-mono text-sm tracking-widest uppercase gradient-text opacity-60"
+      >
         {{ t("plate.empty") }}
       </p>
     </div>
@@ -217,11 +240,16 @@ const saveEdit = async (): Promise<void> => {
       <div
         v-for="task in sortedTasks"
         :key="task.id"
-        class="group relative bg-zinc-900 overflow-hidden border border-zinc-800 hover:border-zinc-600 rounded-lg p-5 transition-all duration-300 hover:shadow-xl hover:shadow-zinc-900/50"
+        class="task-card group relative overflow-hidden rounded-xl p-5 transition-all duration-300"
       >
         <!-- Hover Glow Effect -->
         <div
-          class="absolute top-0 left-0 w-1 h-full bg-zinc-800 group-hover:bg-green-500 transition-colors duration-300"
+          class="absolute top-0 left-0 w-1 h-full transition-all duration-300"
+          style="background: var(--glass-border)"
+          :style="{
+            background:
+              task.points > 3 ? 'var(--nebula-pink)' : 'var(--glass-border)',
+          }"
         ></div>
 
         <div class="flex items-start pl-4 justify-between">
@@ -460,5 +488,18 @@ const saveEdit = async (): Promise<void> => {
 
 .completing {
   animation: complete-flash 0.3s ease-out;
+}
+
+/* Galaxy Theme Task Card */
+.task-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.task-card:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.1);
 }
 </style>
