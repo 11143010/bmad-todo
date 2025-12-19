@@ -396,7 +396,8 @@ const saveEdit = async (): Promise<void> => {
 
     <!-- Task List -->
     <draggable
-      v-model="localTasks"
+      :model-value="sortedTasks"
+      @update:model-value="localTasks = $event"
       item-key="id"
       tag="div"
       class="space-y-4"
