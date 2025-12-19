@@ -66,6 +66,8 @@ body {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  /* Performance optimization */
+  contain: strict;
 }
 
 /* Layer 1: Slow drifting stars */
@@ -91,6 +93,9 @@ body {
   animation:
     star-drift-1 120s linear infinite,
     twinkle 8s ease-in-out infinite alternate;
+  /* GPU acceleration */
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 /* Layer 2: Faster drifting smaller stars */
@@ -113,6 +118,9 @@ body {
   animation:
     star-drift-2 180s linear infinite,
     twinkle 12s ease-in-out infinite alternate-reverse;
+  /* GPU acceleration */
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 /* Drift animations */
@@ -157,6 +165,9 @@ body {
   pointer-events: none;
   z-index: 0;
   animation: nebula-pulse 20s ease-in-out infinite alternate;
+  /* GPU acceleration */
+  will-change: opacity, transform;
+  transform: translateZ(0);
 }
 
 @keyframes nebula-pulse {
@@ -387,4 +398,24 @@ body {
 .trophy-btn:hover {
   border-color: rgba(251, 191, 36, 0.5);
   box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+}
+
+/* ============================================
+   Accessibility: Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .galaxy-bg::before,
+  .galaxy-bg::after,
+  .nebula-glow {
+    animation: none !important;
+  }
 }
