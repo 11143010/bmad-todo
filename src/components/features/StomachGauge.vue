@@ -279,20 +279,6 @@ const statusText = computed(() => {
           </div>
         </div>
       </div>
-
-      <!-- Orbiting Moon -->
-      <div
-        class="absolute w-4 h-4 rounded-full animate-orbit-moon"
-        :style="{
-          top: '50%',
-          left: '50%',
-          marginTop: '-90px',
-          marginLeft: '-8px',
-          background: 'linear-gradient(135deg, #e5e5e5 0%, #a0a0a0 100%)',
-          boxShadow: `0 0 10px rgba(255,255,255,0.3), inset -2px -2px 4px rgba(0,0,0,0.3)`,
-          transformOrigin: '8px 90px',
-        }"
-      ></div>
     </div>
 
     <!-- Status Text -->
