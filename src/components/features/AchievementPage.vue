@@ -69,12 +69,43 @@ const toggle = () => {
     >
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-40 bg-zinc-950/95 backdrop-blur-sm"
+        class="fixed inset-0 z-40 backdrop-blur-sm"
+        style="
+          background: linear-gradient(
+            180deg,
+            rgba(10, 10, 20, 0.98) 0%,
+            rgba(26, 10, 42, 0.95) 100%
+          );
+        "
       >
-        <!-- Fixed Close Button (same position as trophy) -->
+        <!-- Nebula Glow -->
+        <div
+          class="absolute top-20 right-20 w-96 h-96 rounded-full pointer-events-none"
+          style="
+            background: radial-gradient(
+              circle,
+              rgba(139, 92, 246, 0.15) 0%,
+              transparent 70%
+            );
+            filter: blur(60px);
+          "
+        ></div>
+        <div
+          class="absolute bottom-20 left-20 w-80 h-80 rounded-full pointer-events-none"
+          style="
+            background: radial-gradient(
+              circle,
+              rgba(6, 182, 212, 0.1) 0%,
+              transparent 70%
+            );
+            filter: blur(50px);
+          "
+        ></div>
+
+        <!-- Fixed Close Button -->
         <button
           @click="toggle"
-          class="fixed top-4 right-[4.5rem] z-50 p-3 bg-zinc-800 hover:bg-zinc-700 rounded-full text-zinc-400 hover:text-white transition-all border border-zinc-700"
+          class="trophy-btn fixed top-4 right-[4.5rem] z-50 p-3 rounded-full text-zinc-400 hover:text-white transition-all"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -97,12 +128,15 @@ const toggle = () => {
             <!-- Header -->
             <div class="mb-8">
               <h1
-                class="text-3xl font-black text-white flex items-center gap-3"
+                class="text-3xl font-black flex items-center gap-3 gradient-text"
               >
-                <span>🏆</span>
+                <span
+                  style="filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5))"
+                  >🏆</span
+                >
                 {{ locale === "zh-TW" ? "成就殿堂" : "Achievements" }}
               </h1>
-              <p class="text-zinc-500 mt-1">
+              <p class="text-zinc-400 mt-1">
                 {{ unlockedCount }} / {{ allAchievements.length }}
                 {{ locale === "zh-TW" ? "已解鎖" : "Unlocked" }}
               </p>
@@ -110,9 +144,23 @@ const toggle = () => {
 
             <!-- Progress Bar -->
             <div class="mb-8">
-              <div class="h-3 bg-zinc-800 rounded-full overflow-hidden">
+              <div
+                class="h-3 rounded-full overflow-hidden"
+                style="
+                  background: var(--glass-bg);
+                  border: 1px solid var(--glass-border);
+                "
+              >
                 <div
-                  class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-500"
+                  class="h-full transition-all duration-500"
+                  style="
+                    background: linear-gradient(
+                      90deg,
+                      var(--nebula-cyan),
+                      var(--nebula-purple),
+                      var(--nebula-pink)
+                    );
+                  "
                   :style="{
                     width: `${(unlockedCount / allAchievements.length) * 100}%`,
                   }"
@@ -125,11 +173,11 @@ const toggle = () => {
               <div
                 v-for="achievement in allAchievements"
                 :key="achievement.id"
-                class="relative p-6 rounded-2xl border transition-all duration-300"
+                class="achievement-card relative p-6 rounded-2xl border transition-all duration-300"
                 :class="
                   achievement.unlocked
-                    ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/5 border-amber-500/50'
-                    : 'bg-zinc-900 border-zinc-800 opacity-50 grayscale'
+                    ? 'achievement-unlocked'
+                    : 'achievement-locked'
                 "
               >
                 <!-- Emoji -->
@@ -191,3 +239,40 @@ const toggle = () => {
     </Transition>
   </Teleport>
 </template>
+
+<style scoped>
+/* Achievement Cards */
+.achievement-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.achievement-unlocked {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.1) 0%,
+    rgba(139, 92, 246, 0.1) 50%,
+    rgba(236, 72, 153, 0.05) 100%
+  );
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+}
+
+.achievement-unlocked:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+  transform: translateY(-2px);
+}
+
+.achievement-locked {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+
+.achievement-locked:hover {
+  opacity: 0.75;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+</style>
