@@ -45,17 +45,19 @@ workflow_status:
       agent: "pm"
       required: true
     - id: "test-design"
-      status: "pending"
+      status: "completed"
       agent: "tea"
       recommended: true
+      output: "_bmad-output/test-design-system.md"
     - id: "validate-architecture"
       status: "pending"
       agent: "architect"
       optional: true
     - id: "implementation-readiness"
-      status: "pending"
+      status: "completed"
       agent: "architect"
       required: true
+      output: "_bmad-output/implementation-readiness-report-2025-12-24.md"
   implementation:
     - id: "sprint-planning"
       status: "pending"

@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { getDB } from "@/modules/db";
 import type { EggDocType } from "@/modules/incubator/egg.schema";
 import { v4 as uuidv4 } from "uuid";

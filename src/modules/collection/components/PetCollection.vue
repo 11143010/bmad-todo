@@ -43,25 +43,6 @@ const getPetIcon = (type: string) => {
   };
   return icons[type] || icons[type.toLowerCase()] || getUrl("👾");
 };
-
-const getPetColorClass = (rarity: string) => {
-  switch (rarity) {
-    case "divine":
-      return "text-black drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] stroke-white stroke-[0.5]";
-    case "mythic":
-      return "text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.8)]";
-    case "legendary":
-      return "text-orange-400 drop-shadow-[0_0_10px_rgba(251,146,60,0.8)]";
-    case "epic":
-      return "text-purple-500 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]";
-    case "rare":
-      return "text-blue-400 drop-shadow-[0_0_6px_rgba(96,165,250,0.8)]";
-    case "uncommon":
-      return "text-lime-500 drop-shadow-[0_0_4px_rgba(132,204,22,0.6)]";
-    default:
-      return "text-gray-200 drop-shadow-[0_0_2px_rgba(255,255,255,0.2)]";
-  }
-};
 </script>
 
 <template>

@@ -9,7 +9,7 @@ import IncubatorModal from "./IncubatorModal.vue";
 import type { EggDocType } from "@/modules/incubator/egg.schema";
 
 const userStore = useUserStore();
-const { eggs, init: initIncubator, activeIncubationCount } = useIncubator();
+const { eggs, init: initIncubator } = useIncubator();
 const EGG_PRICE = 100;
 
 const selectedEggId = ref<string | null>(null);
@@ -96,7 +96,7 @@ const buyEgg = async () => {
   const success = await userStore.spendEnergy(EGG_PRICE);
   if (success) {
     const roll = Math.random();
-    let rarity = "common"; // White (Default 40%)
+    let rarity: any = "common"; // White (Default 40%)
 
     // Cumulative Probability
     if (roll > 0.98)

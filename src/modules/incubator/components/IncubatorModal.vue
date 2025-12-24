@@ -103,6 +103,40 @@ const getEggColorClass = (rarity: string) => {
       return "text-gray-200 drop-shadow-[0_0_2px_rgba(255,255,255,0.2)]";
   }
 };
+
+const getPetIcon = (type: string) => {
+  const getUrl = (emoji: string) =>
+    `https://emojicdn.elk.sh/${emoji}?style=twitter`;
+
+  const icons: Record<string, string> = {
+    // Common
+    slime: "/pets/slime.png",
+    rock: "/pets/rock.png",
+    worm: "/pets/worm.png",
+    // Uncommon
+    beetle: "/pets/beetle.png",
+    bat: "/pets/bat.png",
+    wolf: "/pets/wolf.png",
+    // Rare
+    ghost: "/pets/ghost.png",
+    golem: "/pets/golem.png",
+    griffin: "/pets/griffin.png",
+    // Epic
+    unicorn: "/pets/unicorn.png",
+    phoenix: "/pets/phoenix.png",
+    hydra: "/pets/hydra.png",
+    // Legendary
+    dragon: "/pets/dragon.png",
+    titan: "/pets/titan.png",
+    angel: "/pets/angel.png",
+    // Mythic
+    cthulhu: "/pets/cthulhu.png",
+    leviathan: "/pets/leviathan.png",
+    // Divine
+    "the creator": "/pets/the creator.png",
+  };
+  return icons[type] || icons[type.toLowerCase()] || getUrl("👾");
+};
 </script>
 
 <template>
@@ -127,9 +161,12 @@ const getEggColorClass = (rarity: string) => {
           IT'S A {{ hatchedPet.type.toUpperCase() }}!
         </h2>
 
-        <div class="text-6xl animate-pop-in">
-          <!-- Placeholder Icon based on type or just a generic pet icon -->
-          👾
+        <div class="w-40 h-40 animate-pop-in">
+          <img
+            :src="getPetIcon(hatchedPet.type)"
+            :alt="hatchedPet.type"
+            class="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+          />
         </div>
 
         <div class="text-center space-y-2 relative z-10 animate-slide-up">
