@@ -79,14 +79,17 @@ export const useAnalyticsStore = defineStore("analytics", () => {
       const existingLog = await db.daily_logs.findOne(todayId).exec();
 
       if (existingLog) {
-        await existingLog.update({
-          $inc: {
-            totalPoints: taskData.points,
-            tasksCompleted: 1,
-          },
-          $push: {
-            records: record,
-          },
+        // Use atomic update function to safely handle the records array
+        await existingLog.incrementalModify((doc) => {
+          const records = [...(doc.records || [])];
+          records.push(record);
+
+          return {
+            ...doc,
+            totalPoints: (doc.totalPoints || 0) + taskData.points,
+            tasksCompleted: (doc.tasksCompleted || 0) + 1,
+            records: records,
+          };
         });
       } else {
         await db.daily_logs.insert({
@@ -121,13 +124,15 @@ export const useAnalyticsStore = defineStore("analytics", () => {
     };
 
     if (existingLog) {
-      await existingLog.update({
-        $inc: {
-          overloadCount: 1,
-        },
-        $push: {
-          records: record,
-        },
+      await existingLog.incrementalModify((doc) => {
+        const records = [...(doc.records || [])];
+        records.push(record);
+
+        return {
+          ...doc,
+          overloadCount: (doc.overloadCount || 0) + 1,
+          records: records,
+        };
       });
     } else {
       await db.daily_logs.insert({

@@ -1,0 +1,63 @@
+generated: "2025-12-19"
+project: "bmad-app"
+project_type: "application"
+field_type: "brownfield"
+selected_track: "bmad-method"
+workflow_path: "_bmad/bmm/workflows/workflow-status/paths/method-brownfield.yaml"
+workflow_status:
+  documentation:
+    - id: "document-project"
+      status: "completed"
+      agent: "analyst"
+      command: "document-project"
+      required: true
+      output: "docs/index.md"
+  discovery:
+    - id: "brainstorm-project"
+      status: "optional"
+      agent: "analyst"
+    - id: "research"
+      status: "optional"
+      agent: "analyst"
+    - id: "product-brief"
+      status: "completed"
+      agent: "analyst"
+      output: "analysis/product-brief-TodoList-2025-12-19.md"
+  planning:
+    - id: "prd"
+      status: "completed"
+      agent: "pm"
+      required: true
+      output: "_bmad-output/prd.md"
+    - id: "create-ux-design"
+      status: "completed"
+      agent: "ux-designer"
+      conditional: "if_has_ui"
+      output: "_bmad-output/ux-design-specification.md"
+  solutioning:
+    - id: "create-architecture"
+      status: "completed"
+      agent: "architect"
+      recommended: true
+      output: "_bmad-output/architecture.md"
+    - id: "create-epics-and-stories"
+      status: "pending"
+      agent: "pm"
+      required: true
+    - id: "test-design"
+      status: "pending"
+      agent: "tea"
+      recommended: true
+    - id: "validate-architecture"
+      status: "pending"
+      agent: "architect"
+      optional: true
+    - id: "implementation-readiness"
+      status: "pending"
+      agent: "architect"
+      required: true
+  implementation:
+    - id: "sprint-planning"
+      status: "pending"
+      agent: "sm"
+      required: true

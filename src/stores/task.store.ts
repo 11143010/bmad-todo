@@ -120,7 +120,7 @@ export const useTaskStore = defineStore("tasks", () => {
     const task = await db.tasks.findOne(id).exec();
     if (task) {
       // Get necessary data before updating
-      // const points = task.points;
+      const points = task.points || 0;
 
       await task.patch({ status: "completed" });
       sensory.play("complete");
@@ -134,7 +134,7 @@ export const useTaskStore = defineStore("tasks", () => {
         await analytics.logAction({
           id: task.id,
           title: task.title,
-          points: task.points,
+          points: task.points ?? 0,
         });
 
         // Check achievements
@@ -143,8 +143,22 @@ export const useTaskStore = defineStore("tasks", () => {
         );
         const achievementStore = useAchievementStore();
         await achievementStore.checkAchievements();
+
+        // Award Energy (Gamification)
+        console.log(
+          `[TaskStore] Completing task "${task.title}" with points:`,
+          points
+        );
+        const { useUserStore } = await import("@/stores/user.store");
+        const userStore = useUserStore();
+        const energyAward = points > 0 ? points : 100;
+        console.log(
+          `[TaskStore] Awarding energy: ${energyAward}. Current energy: ${userStore.energy}`
+        );
+        await userStore.addEnergy(energyAward);
+        console.log(`[TaskStore] Energy awarded.`);
       } catch (error) {
-        console.warn("Analytics/achievements failed:", error);
+        console.warn("Analytics/achievements/energy failed:", error);
       }
     }
   };

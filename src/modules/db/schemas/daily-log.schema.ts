@@ -5,7 +5,7 @@ import {
 } from "rxdb";
 
 export const dailyLogSchemaLiteral = {
-  version: 1,
+  version: 2,
   primaryKey: "id", // YYYY-MM-DD
   type: "object",
   properties: {

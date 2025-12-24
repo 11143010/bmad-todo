@@ -192,7 +192,9 @@ const handleTaskComplete = async (
   };
 
   // Complete the task
+  console.log("[Plate] Completing task:", taskId);
   await taskStore.completeTask(taskId);
+  console.log("[Plate] Task completion finished");
 };
 
 /**

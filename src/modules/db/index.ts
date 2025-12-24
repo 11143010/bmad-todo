@@ -23,6 +23,9 @@ import {
   dailyLogSchema,
   type DailyLogDocType,
 } from "./schemas/daily-log.schema";
+import { eggSchema, type EggDocType } from "../incubator/egg.schema";
+import { userSchema, type UserDocType } from "./schemas/user.schema";
+import { petSchema, type PetDocType } from "@/modules/collection/pet.schema";
 
 // Enable plugins
 addRxPlugin(RxDBUpdatePlugin);
@@ -35,6 +38,9 @@ export type BMadDatabaseCollections = {
   tasks: RxCollection<TaskDocType>;
   settings: RxCollection<SettingsDocType>;
   daily_logs: RxCollection<DailyLogDocType>;
+  eggs: RxCollection<EggDocType>;
+  pets: RxCollection<PetDocType>;
+  users: RxCollection<UserDocType>;
 };
 
 /** Database type with all collections */
@@ -102,7 +108,31 @@ const _create = async (): Promise<BMadDatabase> => {
           ...oldDoc,
           records: [],
         }),
+        // Migration from version 1 to 2: just schema alignment (records are already there)
+        2: (oldDoc: Record<string, unknown>) => oldDoc,
       },
+    },
+    eggs: {
+      schema: eggSchema,
+      migrationStrategies: {
+        1: (oldDoc: Record<string, unknown>) => ({
+          ...oldDoc,
+          rarity: "common",
+        }),
+        2: (oldDoc: Record<string, unknown>) => oldDoc,
+        3: (oldDoc: Record<string, unknown>) => ({
+          ...oldDoc,
+          incubationDuration: 0,
+        }),
+      },
+    },
+    pets: {
+      schema: petSchema,
+      migrationStrategies: {},
+    },
+    users: {
+      schema: userSchema,
+      migrationStrategies: {},
     },
   });
 

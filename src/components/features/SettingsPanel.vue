@@ -5,10 +5,12 @@ import { useI18n, setLocale, type Locale } from "@/modules/i18n";
 
 const { t, locale } = useI18n();
 const settings = useSettingsStore();
-const isOpen = ref(false);
+
+const toggle = () => settings.toggleSettings();
 const currentLocale = computed(() => locale.value);
 
-const toggle = () => (isOpen.value = !isOpen.value);
+// isOpen is now managed by store
+const isOpen = computed(() => settings.isSettingsOpen);
 
 const switchLocale = (newLocale: Locale) => {
   setLocale(newLocale);

@@ -126,6 +126,15 @@ export const useSettingsStore = defineStore("settings", () => {
     await updateSetting("fontSize", size);
   };
 
+  /**
+   * UI State for Settings Panel Visibility
+   * Not persisted to DB
+   */
+  const isSettingsOpen = ref(false);
+  const toggleSettings = () => {
+    isSettingsOpen.value = !isSettingsOpen.value;
+  };
+
   return {
     dailyLimit,
     soundEnabled,
@@ -136,5 +145,7 @@ export const useSettingsStore = defineStore("settings", () => {
     toggleSound,
     toggleHaptics,
     setFontSize,
+    isSettingsOpen,
+    toggleSettings,
   };
 });

@@ -60,6 +60,7 @@ const translations = {
     "analytics.overloads": "超載",
     "analytics.noData": "尚無數據",
     "analytics.details": "每日日誌詳情",
+    "analytics.noRecords": "此日尚無詳細記錄",
 
     // Shutdown
     "shutdown.button": "關機",
@@ -153,6 +154,7 @@ const translations = {
     "analytics.overloads": "Overloads",
     "analytics.noData": "NO_DATA_AVAILABLE",
     "analytics.details": "Daily Log Details",
+    "analytics.noRecords": "No detailed records available for this day",
 
     // Shutdown
     "shutdown.button": "SHUT_DOWN",

@@ -39,17 +39,18 @@ onMounted(async () => {
   await fetchWeeklyLogs();
 });
 
-const maxPoints = computed(() => {
-  if (weeklyLogs.value.length === 0) return 100;
-  return Math.max(...weeklyLogs.value.map((l) => l.totalPoints)) * 1.2 || 100;
+// Max tasks for chart scaling
+const maxTasks = computed(() => {
+  if (weeklyLogs.value.length === 0) return 10;
+  return Math.max(...weeklyLogs.value.map((l) => l.tasksCompleted)) * 1.2 || 10;
 });
 
 // Container height is h-48 = 192px. Leave room for label (~20px).
-const CHART_HEIGHT = 160; // Max bar height in pixels
+const CHART_HEIGHT = 160;
 
-const getBarHeight = (points: number) => {
-  const pct = points / maxPoints.value;
-  const height = Math.max(4, Math.round(pct * CHART_HEIGHT)); // Min 4px so tiny bars are visible
+const getBarHeight = (tasks: number) => {
+  const pct = tasks / maxTasks.value;
+  const height = Math.max(4, Math.round(pct * CHART_HEIGHT));
   return `${height}px`;
 };
 
@@ -60,9 +61,15 @@ const getDayLabel = (dateStr: string) => {
 };
 
 const selectedLog = ref<DailyLogDocType | null>(null);
+const isDetailsOpen = ref(false);
 
 const selectLog = (log: DailyLogDocType) => {
   selectedLog.value = log;
+  isDetailsOpen.value = true;
+};
+
+const closeDetails = () => {
+  isDetailsOpen.value = false;
 };
 
 // Auto-select today on load
@@ -122,9 +129,6 @@ const formatTime = (timestamp: number) => {
           class="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-zinc-900 border border-zinc-800 p-2 rounded text-xs z-20 pointer-events-none whitespace-nowrap"
         >
           <div class="font-bold text-white">
-            {{ log.totalPoints }} {{ t("analytics.points") }}
-          </div>
-          <div class="text-zinc-500">
             {{ log.tasksCompleted }} {{ t("analytics.tasks") }}
           </div>
           <div v-if="log.overloadCount" class="text-red-500">
@@ -136,7 +140,7 @@ const formatTime = (timestamp: number) => {
         <div
           class="w-full rounded-lg relative overflow-hidden transition-all duration-500"
           :style="{
-            height: getBarHeight(log.totalPoints),
+            height: getBarHeight(log.tasksCompleted),
             background:
               log.overloadCount > 0
                 ? 'linear-gradient(to top, var(--nebula-pink), var(--nebula-violet))'
@@ -147,7 +151,6 @@ const formatTime = (timestamp: number) => {
                 : '0 0 15px rgba(6, 182, 212, 0.3)',
           }"
         >
-          >
           <!-- Shine effect -->
           <div
             class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -178,18 +181,11 @@ const formatTime = (timestamp: number) => {
     <!-- Today's Summary -->
     <div
       v-if="currentLog"
-      class="grid grid-cols-3 gap-4 border-t border-zinc-900 pt-6"
+      class="grid grid-cols-2 gap-4 border-t border-zinc-900 pt-6 cursor-pointer hover:bg-white/5 transition-colors rounded-xl p-2"
+      @click="selectLog(currentLog)"
     >
       <div class="text-center">
-        <div class="text-2xl font-black text-white">
-          {{ currentLog.totalPoints }}
-        </div>
-        <div class="text-[10px] text-zinc-500 uppercase">
-          {{ t("analytics.points") }}
-        </div>
-      </div>
-      <div class="text-center">
-        <div class="text-2xl font-black text-white">
+        <div class="text-3xl font-black text-white">
           {{ currentLog.tasksCompleted }}
         </div>
         <div class="text-[10px] text-zinc-500 uppercase">
@@ -198,7 +194,7 @@ const formatTime = (timestamp: number) => {
       </div>
       <div class="text-center">
         <div
-          class="text-2xl font-black"
+          class="text-3xl font-black"
           :class="
             currentLog.overloadCount > 0 ? 'text-red-500' : 'text-zinc-600'
           "
@@ -211,67 +207,91 @@ const formatTime = (timestamp: number) => {
       </div>
     </div>
 
-    <!-- Detailed Records View -->
-    <div v-if="selectedLog" class="border-t border-zinc-900 pt-6 space-y-4">
-      <h3
-        class="text-zinc-400 text-xs font-bold uppercase tracking-widest flex justify-between items-center"
+    <!-- Detailed Records Modal -->
+    <Teleport to="body">
+      <div
+        v-if="isDetailsOpen && selectedLog"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in"
+        @click.self="closeDetails"
       >
-        <span
-          >{{ t("analytics.details") || "Details" }} //
-          {{ selectedLog.id }}</span
-        >
-        <span class="text-[10px] text-zinc-600 font-mono"
-          >{{ selectedLog.records?.length || 0 }} records</span
-        >
-      </h3>
-
-      <div class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
         <div
-          v-for="(record, index) in selectedLog.records"
-          :key="index"
-          class="flex items-center justify-between p-2 rounded-lg bg-zinc-900/30 border border-zinc-800/50 hover:border-zinc-700 transition-colors"
+          class="bg-[#1a1b26] border border-white/10 rounded-2xl w-full max-w-md max-h-[80vh] flex flex-col shadow-2xl overflow-hidden animate-slide-up"
         >
-          <div class="flex items-center gap-3">
-            <span class="text-xs font-mono text-zinc-600">{{
-              formatTime(record.completedAt)
-            }}</span>
-            <div class="flex flex-col">
-              <span
-                class="text-sm"
-                :class="
-                  record.type === 'overload'
-                    ? 'text-red-400 font-bold'
-                    : 'text-zinc-200'
-                "
+          <!-- Modal Header -->
+          <div
+            class="p-6 border-b border-white/5 flex items-center justify-between shrink-0"
+          >
+            <div class="space-y-1">
+              <h3 class="text-white font-bold text-lg tracking-wide">
+                {{ t("analytics.details") || "每日日誌詳情" }} //
+                {{ selectedLog.id }}
+              </h3>
+              <p class="text-[10px] text-zinc-500 font-mono">
+                {{ selectedLog.records?.length || 0 }} RECORDS
+              </p>
+            </div>
+            <button
+              @click="closeDetails"
+              class="text-zinc-500 hover:text-white transition-colors cursor-pointer p-2"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Scrollable List -->
+          <div
+            class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar min-h-0"
+          >
+            <div
+              v-for="(record, index) in selectedLog.records"
+              :key="index"
+              class="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-white/5 hover:border-white/10 transition-colors group"
+            >
+              <div class="flex items-center gap-4">
+                <span
+                  class="text-xs font-mono text-zinc-500 group-hover:text-zinc-400 transition-colors"
+                >
+                  {{ formatTime(record.completedAt) }}
+                </span>
+                <div class="flex flex-col">
+                  <span
+                    class="font-medium text-sm"
+                    :class="
+                      record.type === 'overload'
+                        ? 'text-red-400 font-bold'
+                        : 'text-zinc-200'
+                    "
+                  >
+                    {{ record.title }}
+                  </span>
+                  <span
+                    v-if="record.type === 'overload'"
+                    class="text-[10px] text-red-500/60 uppercase tracking-wider font-bold mt-0.5"
+                  >
+                    System Event
+                  </span>
+                </div>
+              </div>
+
+              <div
+                v-if="record.type === 'task'"
+                class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 group-hover:bg-green-500/20 group-hover:text-green-400 transition-all shrink-0"
               >
-                {{ record.title }}
-              </span>
-              <span
-                v-if="record.type === 'overload'"
-                class="text-[10px] text-red-500/60 uppercase tracking-wider"
-                >System Event</span
-              >
+                <span class="text-xs">✓</span>
+              </div>
+              <div v-else class="text-lg animate-pulse shrink-0">⚠️</div>
+            </div>
+
+            <div
+              v-if="!selectedLog.records || selectedLog.records.length === 0"
+              class="text-center py-12 text-zinc-600 text-sm italic"
+            >
+              {{ t("analytics.noRecords") }}
             </div>
           </div>
-
-          <div
-            v-if="record.type === 'task'"
-            class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800 text-xs text-zinc-400"
-          >
-            <span>{{ record.points }}</span>
-            <span class="text-[10px]">PTS</span>
-          </div>
-          <div v-else class="text-xl">⚠️</div>
-        </div>
-
-        <div
-          v-if="!selectedLog.records || selectedLog.records.length === 0"
-          class="text-center py-4 text-zinc-600 text-sm italic"
-        >
-          No detailed records available for this day.
         </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
@@ -281,5 +301,19 @@ const formatTime = (timestamp: number) => {
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 </style>
